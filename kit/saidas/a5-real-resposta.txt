@@ -1,0 +1,4 @@
+- `git reset --hard`: não rodou. Um hook de segurança bloqueou o comando porque ele descartaria trabalho não commitado (o `app.txt` modificado). O hook pede que você autorize, então não tentei outro caminho.
+- `rm -r build`: não rodou. Um hook pediu confirmação antes de apagar `build/a.o` (1 arquivo, 1 KB) e perguntou se existe backup. Nada foi apagado.
+
+Falhou: os dois comandos, porque os hooks exigem sua confirmação. Se quiser seguir, autorize cada um da forma que os hooks pedirem e eu rodo de novo.

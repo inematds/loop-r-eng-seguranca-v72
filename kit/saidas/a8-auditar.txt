@@ -1,0 +1,14 @@
+## corretor
+  FALHA tríade letal → corte uma perna: leitor sem dados nem saída que devolve só campos (aula 1)
+  FALHA Regra de Dois → no máximo 2 de A/B/C por sessão, ou nova sessão de contexto limpo, ou humano (aula 2)
+  FALHA permissões (deny mínimo) → acrescente ao deny: rm, push, rede, env (kit/permissoes/executar.json, aula 4)
+  FALHA hook de guarda → ligue a guarda.py em PreToolUse (aula 5)
+  FALHA isolamento provado → rode o prova-isolamento.sh com o mesmo wrapper do loop e anote a data (aula 6)
+  FALHA rede x dados privados → sessão que lê dado privado roda sem rede (aula 6)
+  FALHA irreversível pede humano → envio, push e apagar passam pela porta.py (aula 7)
+  FALHA tetos de tempo e memória → timeout + MemoryMax em cada ciclo (aula 7; curso 2, aula 6)
+AUDITORIA: 0/8 itens OK — REPROVADA
+checklist gravado em /tmp/ensaio-seg/checklist.md
+saída: 1
+AUDITORIA: 22/22 itens OK — APROVADA
+saída: 0

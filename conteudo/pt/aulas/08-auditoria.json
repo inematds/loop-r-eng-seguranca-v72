@@ -1,0 +1,334 @@
+{
+  "slug": "auditoria",
+  "num": 8,
+  "menu": "Auditoria",
+  "titulo": "Auditoria de segurança do seu loop",
+  "titulo_curto": "Auditoria do loop",
+  "minutos": 20,
+  "lead": "Tudo o que o curso montou cabe num arquivo: o mapa das sessões do seu loop, com as ferramentas e os controles de cada uma. O auditar.py lê o mapa, confere tríade, Regra de Dois, permissões, guarda, isolamento provado, rede, porta e tetos, e grava o checklist do que falta. Você corrige, audita de novo e marca a próxima revisão.",
+  "objetivo": "auditar o seu loop com o mapa das sessões, gerar o checklist do que falta e marcar a data da próxima revisão.",
+  "competencias": [
+    "auditar-o-loop-por-mapa",
+    "gerar-checklist-de-seguranca",
+    "revisar-a-seguranca-com-data"
+  ],
+  "aprende": [
+    {
+      "icone": "lista",
+      "t": "O mapa completo: ferramentas e controles por sessão"
+    },
+    {
+      "icone": "check",
+      "t": "Oito itens por sessão, cada um com a aula que corrige"
+    },
+    {
+      "icone": "arquivo",
+      "t": "O checklist em Markdown, gerado e versionado no projeto"
+    },
+    {
+      "icone": "calendario",
+      "t": "Reauditar: a cada ferramenta nova, a cada máquina nova"
+    }
+  ],
+  "hero_alt": "Prancheta de inspeção sobre um rack de servidor aberto, com uma lanterna acesa iluminando os cabos.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Mapa, auditoria, correção",
+      "sub": "Clique em cada etapa.",
+      "nos": [
+        {
+          "icone": "lista",
+          "titulo": "Mapa",
+          "sub": "sessões e controles",
+          "detalhe": "O JSON das aulas 1 e 2, com um bloco controles por sessão: motor, deny, sandbox, hooks, prova_isolamento, rede, porta e tetos."
+        },
+        {
+          "icone": "lupa",
+          "titulo": "auditar.py",
+          "sub": "8 itens por sessão",
+          "forte": true,
+          "detalhe": "Tríade, Regra de Dois, permissões (deny mínimo no Claude, -s no Codex), hook de guarda, isolamento provado, rede x dado privado, irreversível pela porta, tetos. Cada falha diz qual aula corrige."
+        },
+        {
+          "icone": "arquivo",
+          "titulo": "Checklist",
+          "sub": "--md",
+          "detalhe": "O mesmo resultado em Markdown, com [x] e [ ], para versionar no projeto e revisar com quem mais roda o loop."
+        },
+        {
+          "icone": "calendario",
+          "titulo": "Reauditar",
+          "sub": "com data",
+          "detalhe": "Ferramenta nova, MCP novo, máquina nova ou versão nova do Claude Code ou do Codex: o mapa muda e a prova de isolamento envelhece. Audite de novo."
+        }
+      ],
+      "volta": "Corrigiu? Audite de novo até APROVADA",
+      "legenda": "O auditar.py confere o mapa, não a máquina: quem garante que o mapa é verdadeiro é você, com as provas das aulas 4 a 7."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Ensaio: o loop antes e depois",
+      "sub": "meu-loop.json é o corretor noturno da aula 2 numa sessão só, com deny estreito e sem prova de isolamento. meu-loop-seguro.json é o mesmo loop depois do curso.",
+      "blocos": [
+        {
+          "rot": "Terminal · auditar os dois mapas",
+          "icone": "play",
+          "conteudo": "K=~/projetos/loop-r-eng-seguranca-v72/kit\npython3 $K/auditar.py $K/mapas/meu-loop.json --md /tmp/ensaio-seg/checklist.md; echo \"saída: $?\"\npython3 $K/auditar.py $K/mapas/meu-loop-seguro.json | tail -1; echo \"saída: $?\""
+        },
+        {
+          "rot": "Arquivo · kit/mapas/meu-loop.json (fictício)",
+          "icone": "arquivo",
+          "conteudo": "{\n  \"loop\": \"corretor noturno de bugs (primeira versão, fictícia)\",\n  \"sessoes\": [\n    {\n      \"nome\": \"corretor\",\n      \"ferramentas\": [\n        { \"nome\": \"ler o texto da issue\", \"terceiros\": true },\n        { \"nome\": \"ler o repositório privado e o .env\", \"privado\": true },\n        { \"nome\": \"editar e rodar comandos\", \"muda_estado\": true },\n        { \"nome\": \"git push e comentar no PR\", \"saida\": true, \"muda_estado\": true }\n      ],\n      \"controles\": {\n        \"motor\": \"claude\",\n        \"deny\": [\"Bash(rm -rf *)\"],\n        \"hooks\": [],\n        \"rede\": true,\n        \"tetos\": { \"tempo\": \"2h\" }\n      }\n    }\n  ]\n}"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>## corretor\n  FALHA tríade letal → corte uma perna: leitor sem dados nem saída que devolve só campos (aula 1)\n  FALHA Regra de Dois → no máximo 2 de A/B/C por sessão, ou nova sessão de contexto limpo, ou humano (aula 2)\n  FALHA permissões (deny mínimo) → acrescente ao deny: rm, push, rede, env (kit/permissoes/executar.json, aula 4)\n  FALHA hook de guarda → ligue a guarda.py em PreToolUse (aula 5)\n  FALHA isolamento provado → rode o prova-isolamento.sh com o mesmo wrapper do loop e anote a data (aula 6)\n  FALHA rede x dados privados → sessão que lê dado privado roda sem rede (aula 6)\n  FALHA irreversível pede humano → envio, push e apagar passam pela porta.py (aula 7)\n  FALHA tetos de tempo e memória → timeout + MemoryMax em cada ciclo (aula 7; curso 2, aula 6)\nAUDITORIA: 0/8 itens OK — REPROVADA\nchecklist gravado em /tmp/ensaio-seg/checklist.md\nsaída: 1\nAUDITORIA: 22/22 itens OK — APROVADA\nsaída: 0</pre><p>O mapa seguro tem três sessões (leitor, corretor, publicar) e passa nos 22 itens. O publicar junta as três letras, mas com humano em cada ação.</p>"
+          },
+          {
+            "rot": "Erro comum: mapa otimista",
+            "html": "<p>Marcar \"rede\": false sem ter rodado o prova-isolamento.sh, ou \"porta\": true com um envio ainda direto no código, faz a auditoria aprovar um loop aberto. Cada controle do mapa precisa de uma prova das aulas anteriores ao lado.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática final",
+      "sub": "Auditar o seu loop até aprovar.",
+      "exercicios": [
+        {
+          "id": "e21",
+          "titulo": "E21 · Ensaio da auditoria",
+          "min": "5 min",
+          "texto": "Rode o bloco do ensaio e abra /tmp/ensaio-seg/checklist.md.",
+          "pronto": "<code>AUDITORIA: 0/8 itens OK — REPROVADA</code> com <code>saída: 1</code>, e <code>AUDITORIA: 22/22 itens OK — APROVADA</code> com <code>saída: 0</code>."
+        },
+        {
+          "id": "e22",
+          "titulo": "E22 · O mapa completo do seu loop",
+          "min": "30 min",
+          "texto": "Acrescente ao ~/meu-mapa.json das aulas 1 e 2 o bloco controles de cada sessão, com as provas que você já rodou: deny da aula 4, guarda da aula 5, prova de isolamento da aula 6, porta e tetos da aula 7.",
+          "pronto": "<code>python3 $K/auditar.py ~/meu-mapa.json --md SEGURANCA.md</code> imprime uma linha <code>AUDITORIA:</code> e grava <code>SEGURANCA.md</code> no projeto."
+        },
+        {
+          "id": "e23",
+          "titulo": "E23 · Até aprovar, com data",
+          "min": "60 min",
+          "texto": "Corrija um item por vez, na ordem da lista, refazendo a prova da aula indicada. Commite o SEGURANCA.md e ponha a próxima auditoria no calendário (o gerador abaixo faz o .ics).",
+          "pronto": "<code>python3 $K/auditar.py ~/meu-mapa.json; echo $?</code> → <code>APROVADA</code> e <code>0</code>, e <code>git log --oneline -1 -- SEGURANCA.md</code> mostra o commit."
+        }
+      ]
+    },
+    {
+      "tipo": "mapa",
+      "titulo": "O mapa do curso",
+      "sub": "Quatro entregas, na ordem. Clique num exercício para ver o \"pronto quando\".",
+      "degraus": [
+        {
+          "aula": "dois",
+          "icone": "camadas",
+          "quando": "Dia 1",
+          "titulo": "Mapear",
+          "sub": "aulas 1 e 2",
+          "saida": "Mapa do loop sem sessão autônoma com as três pernas.",
+          "passo": "triade.py aprovando na tríade e na Regra de Dois."
+        },
+        {
+          "aula": "injecao",
+          "icone": "alvo",
+          "quando": "Dia 2",
+          "titulo": "Separar",
+          "sub": "aula 3",
+          "saida": "Leitor que devolve só campos e um canário no loop.",
+          "passo": "Requer o dia 1. Ensaio dos três agentes e canário ausente na sua saída."
+        },
+        {
+          "aula": "sandbox",
+          "icone": "escudo",
+          "quando": "Dias 3 e 4",
+          "titulo": "Travar",
+          "sub": "aulas 4 a 6",
+          "saida": "deny por etapa, guarda ligada e isolamento provado.",
+          "passo": "Requer o dia 2. regra.py, provar-guarda.sh e prova-isolamento.sh com o wrapper do seu loop."
+        },
+        {
+          "aula": "auditoria",
+          "icone": "portao",
+          "quando": "Dia 5",
+          "titulo": "Porta e auditoria",
+          "sub": "aulas 7 e 8",
+          "saida": "Irreversível pela porta e SEGURANCA.md aprovado e datado.",
+          "passo": "Requer tudo antes. Porta, systemd com teto e auditar.py até APROVADA."
+        }
+      ],
+      "resultado": {
+        "titulo": "Ao final do curso",
+        "texto": "Um loop em que nenhuma sessão autônoma junta as três pernas, cada etapa tem só a permissão que usa, a trava foi provada na sua máquina e o irreversível espera por você.",
+        "total": "23 exercícios"
+      },
+      "rolagem_fim": {
+        "titulo": "O curso inteiro",
+        "texto": "Mapear, separar, travar e pôr a porta. Só passe para a próxima entrega quando o \"pronto quando\" da anterior for verdade."
+      },
+      "legenda": "Ordem obrigatória: travar um loop mal mapeado protege a sessão errada."
+    },
+    {
+      "tipo": "gerador",
+      "titulo": "Gere o seu plano com datas",
+      "sub": "Escolha o início e quanto tempo você tem por semana. O plano lista os 23 exercícios na ordem.",
+      "curso": "Segurança do Loop Autônomo",
+      "horas_padrao": 5,
+      "degraus": [
+        {
+          "titulo": "Aula 1 · A tríade letal",
+          "aula": "triade"
+        },
+        {
+          "titulo": "Aula 2 · Regra de Dois",
+          "aula": "dois"
+        },
+        {
+          "titulo": "Aula 3 · Injeção pelo conteúdo",
+          "aula": "injecao"
+        },
+        {
+          "titulo": "Aula 4 · Permissões por etapa",
+          "aula": "permissoes"
+        },
+        {
+          "titulo": "Aula 5 · Hooks de guarda",
+          "aula": "hooks"
+        },
+        {
+          "titulo": "Aula 6 · Sandbox provado",
+          "aula": "sandbox"
+        },
+        {
+          "titulo": "Aula 7 · Irreversível e fora do terminal",
+          "aula": "irreversivel"
+        },
+        {
+          "titulo": "Aula 8 · Auditoria do loop",
+          "aula": "auditoria"
+        }
+      ],
+      "txt": {
+        "titulo": "Plano — Segurança do Loop Autônomo",
+        "inicio": "Início",
+        "ritmo": "Ritmo",
+        "termino": "Término previsto",
+        "ate": "até",
+        "pronto": "pronto quando",
+        "semanas": "semanas",
+        "travou": "## O que travou e a regra que criei",
+        "h": "h por semana",
+        "exs": "exercícios"
+      }
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste final",
+      "perguntas": [
+        {
+          "p": "O auditar.py aprovou o seu mapa. O loop está seguro?",
+          "opcoes": [
+            "Sim, o script garante",
+            "Só se o mapa for verdadeiro: cada controle precisa da prova das aulas 4 a 7",
+            "Só se rodar todo dia",
+            "Só com o modelo topo"
+          ],
+          "certa": 1,
+          "explica": "O script confere o mapa, não a máquina. Mapa otimista aprova loop aberto.",
+          "ref": "codigo",
+          "cert": true
+        },
+        {
+          "p": "Qual a ordem do curso para fechar um loop?",
+          "opcoes": [
+            "Sandbox, depois mapa",
+            "Mapear as sessões, separar o leitor, travar (permissão, hook, sandbox) e pôr a porta",
+            "Porta primeiro, o resto depois",
+            "Tanto faz"
+          ],
+          "certa": 1,
+          "explica": "Sem o mapa, você trava a sessão errada. As travas vêm depois de saber o que cada sessão junta.",
+          "ref": "mapa",
+          "cert": true
+        },
+        {
+          "p": "Quando reauditar?",
+          "opcoes": [
+            "Nunca, se aprovou",
+            "A cada ferramenta ou MCP novo, máquina nova ou versão nova do Claude Code ou do Codex",
+            "Só depois de um incidente",
+            "Uma vez por ano"
+          ],
+          "certa": 1,
+          "explica": "Uma ferramenta nova pode trazer uma perna; uma máquina nova pode não ter a trava que a anterior tinha (aula 6).",
+          "ref": "diagrama"
+        },
+        {
+          "p": "Uma sessão junta A, B e C, e não dá para dividir. O que o mapa precisa dizer?",
+          "opcoes": [
+            "Nada",
+            "\"humano\": true, com a porta em cada ação de saída",
+            "\"rede\": true",
+            "\"nova_sessao\": true"
+          ],
+          "certa": 1,
+          "explica": "Com as três, a sessão não é autônoma: supervisão em cada ação, como pede a Regra de Dois.",
+          "ref": "codigo"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "O curso em três frases",
+      "itens": [
+        {
+          "t": "Nenhuma sessão autônoma com as três",
+          "texto": "Tríade e Regra de Dois decidem como dividir o loop."
+        },
+        {
+          "t": "Trava provada, não prometida",
+          "texto": "deny, hook e sandbox, cada um com a sua prova na sua máquina."
+        },
+        {
+          "t": "O irreversível espera por você",
+          "texto": "Porta com hash, fora do alcance do agente, e auditoria com data."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Continue por aqui",
+      "links": [
+        {
+          "t": "Próximo: curso 5, O loop que aprende (LOOP-R aplicado)",
+          "href": "https://inematds.github.io/loop-r-eng-aprende-v72/",
+          "icone": "seta"
+        },
+        {
+          "t": "Área LOOP-R Engenharia",
+          "href": "https://eventos.inema.pro/loop-r-engenharia/",
+          "icone": "camadas"
+        },
+        {
+          "t": "kit/auditar.py",
+          "href": "https://github.com/inematds/loop-r-eng-seguranca-v72/blob/main/kit/auditar.py",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Meta: Agents Rule of Two",
+          "href": "https://ai.meta.com/blog/practical-ai-agent-security/",
+          "icone": "lupa"
+        }
+      ]
+    }
+  ]
+}

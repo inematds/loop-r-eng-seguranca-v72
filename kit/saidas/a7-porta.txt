@@ -1,0 +1,14 @@
+pedido 20261019-065013-4181: enviar-email → cliente@exemplo.invalid (30 caracteres). Aguardando aprovação humana.
+RECUSADO: 20261019-065013-4181 sem aprovação humana
+saída: 1
+RECUSADO: aprovar exige um terminal humano (stdin não é tty)
+saída: 1
+APROVADO 20261019-065013-4181 (hash 50a9d2859698c516)
+RECUSADO: o conteúdo de 20261019-065013-4181 mudou depois da aprovação
+saída: 1
+APROVADO 20261019-065014-b7be (hash 50a9d2859698c516)
+EXECUTADO 20261019-065014-b7be: enviar-email → cliente@exemplo.invalid
+saída: 0
+RECUSADO: 20261019-065014-b7be sem aprovação humana
+saída: 1
+1

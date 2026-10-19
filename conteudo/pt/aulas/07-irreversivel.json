@@ -1,0 +1,338 @@
+{
+  "slug": "irreversivel",
+  "num": 7,
+  "menu": "Irreversível",
+  "titulo": "Irreversível pede humano; rodar fora do terminal sem aumentar o raio de dano",
+  "titulo_curto": "Irreversível e fora do terminal",
+  "minutos": 20,
+  "lead": "Enviar, publicar, apagar e gastar não têm volta. No loop, essas ações viram pedidos que esperam numa porta que só você abre, vendo destino e conteúdo. E quando o loop sai do terminal para o systemd, ele leva junto o teto, o sandbox e a porta, não a sua sessão inteira.",
+  "objetivo": "pôr envio, push e apagar atrás de uma porta que só o humano abre e rodar o loop no systemd com teto e sandbox.",
+  "competencias": [
+    "separar-pedir-de-executar",
+    "aprovar-pelo-conteudo-exato",
+    "rodar-fora-do-terminal-com-teto-e-sandbox"
+  ],
+  "aprende": [
+    {
+      "icone": "portao",
+      "t": "porta.py: pedir, aprovar com hash, executar uma vez"
+    },
+    {
+      "icone": "lista",
+      "t": "Uma política real de ação irreversível, anonimizada"
+    },
+    {
+      "icone": "relogio",
+      "t": "systemd com teto de tempo e memória e o sandbox do Codex dentro"
+    },
+    {
+      "icone": "nuvem",
+      "t": "Routines na nuvem: o mesmo cuidado, sem confirmação de detalhes"
+    }
+  ],
+  "hero_alt": "Duas chaves metálicas em duas fechaduras separadas num painel de cofre industrial.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "A porta do irreversível",
+      "sub": "Clique em cada etapa.",
+      "nos": [
+        {
+          "icone": "robo",
+          "titulo": "Agente pede",
+          "sub": "não executa",
+          "detalhe": "porta.py pedir grava ação, destino e o conteúdo exato num pedido. O agente não tem a ferramenta de enviar: só a de pedir."
+        },
+        {
+          "icone": "usuario",
+          "titulo": "Humano aprova",
+          "sub": "vê e digita o id",
+          "forte": true,
+          "detalhe": "porta.py aprovar mostra destino e conteúdo, exige um terminal (tty) e que você digite o id. A aprovação guarda o hash do conteúdo."
+        },
+        {
+          "icone": "check",
+          "titulo": "Executa",
+          "sub": "uma vez",
+          "detalhe": "porta.py executar recusa sem aprovação e recusa se o conteúdo mudou depois dela. Executou, a aprovação é apagada: não serve para a próxima."
+        },
+        {
+          "icone": "cadeado",
+          "titulo": "Fora do alcance",
+          "sub": "PORTA_DIR",
+          "detalhe": "O tty é uma lombada (um pseudo-terminal finge um, como o ensaio faz). A fronteira de verdade é PORTA_DIR fora do que o agente escreve: no Codex workspace-write, fora do workspace."
+        }
+      ],
+      "legenda": "É o N1 da POLITICA (aula 4): o agente prepara, o humano executa."
+    },
+    {
+      "tipo": "simfila",
+      "titulo": "Veja a fila parar na porta",
+      "sub": "Ciclo noturno do loop. A ação de envio é irreversível: na primeira execução ela para e espera. Aprove (retomar) e ela segue.",
+      "tarefas": [
+        "Rodar os testes",
+        "Corrigir o bug",
+        "Commit local",
+        "Enviar o resumo ao cliente · porta",
+        "Registrar no progress.md"
+      ],
+      "falha": 3,
+      "rot": {
+        "entrada": "na fila",
+        "rodando": "rodando",
+        "feito": "feito",
+        "falhou": "esperando humano",
+        "rodar": "Rodar o ciclo",
+        "parar": "Interromper",
+        "zerar": "Recomeçar"
+      },
+      "msg": {
+        "inicio": "Cinco passos. Um deles é irreversível. Clique em \"Rodar o ciclo\".",
+        "rodando": "Passos reversíveis rodam sozinhos, com teto e sandbox.",
+        "parou": "Interrompido. Nada irreversível rodou.",
+        "retoma": "Você aprovou o pedido pelo conteúdo exato; o ciclo retoma de onde parou.",
+        "fim": "Ciclo concluído, com o envio aprovado uma vez.",
+        "fimfalha": "O envio parou na porta na primeira execução. Depois da aprovação, executou uma vez."
+      },
+      "legenda": "Simulação ilustrativa. A porta de verdade está no ensaio logo abaixo."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Ensaio: a porta do começo ao fim",
+      "sub": "Pedir, tentar sem aprovação, aprovar sem terminal, aprovar \"como humano\", adulterar depois, aprovar de novo, executar e tentar reusar. Nenhum modelo; o envio é uma linha em saida.log.",
+      "blocos": [
+        {
+          "rot": "Terminal · ensaio da porta",
+          "icone": "play",
+          "conteudo": "bash ~/projetos/loop-r-eng-seguranca-v72/kit/porta/ensaio-porta.sh 2>&1"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>pedido 20261019-065013-4181: enviar-email → cliente@exemplo.invalid (30 caracteres). Aguardando aprovação humana.\nRECUSADO: 20261019-065013-4181 sem aprovação humana\nsaída: 1\nRECUSADO: aprovar exige um terminal humano (stdin não é tty)\nsaída: 1\nAPROVADO 20261019-065013-4181 (hash 50a9d2859698c516)\nRECUSADO: o conteúdo de 20261019-065013-4181 mudou depois da aprovação\nsaída: 1\nAPROVADO 20261019-065014-b7be (hash 50a9d2859698c516)\nEXECUTADO 20261019-065014-b7be: enviar-email → cliente@exemplo.invalid\nsaída: 0\nRECUSADO: 20261019-065014-b7be sem aprovação humana\nsaída: 1\n1</pre><p>Quatro recusas e uma execução; o 1 no fim é a única linha em saida.log. Os ids mudam a cada rodada.</p>"
+          },
+          {
+            "rot": "Na vida real",
+            "html": "<p>No ensaio, o script finge digitar o id num pseudo-terminal. Na vida real, você roda <code>python3 porta.py aprovar [id]</code> no seu terminal, lê o conteúdo e digita. Troque o \"executar\" do ensaio pelo seu envio de verdade.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Uma política real, anonimizada",
+      "sub": "Regras de ação irreversível do CLAUDE.md global de uma máquina INEMA, e lições que viraram regra.",
+      "passos": [
+        {
+          "titulo": "Remover pede, cada vez",
+          "texto": [
+            "Exclusão ou remoção publicada exige aprovação individual para cada uma, com o alvo identificado antes. Autorização genérica, em lote ou de publicação não serve como aprovação de exclusão.",
+            "Enviar e-mail e apagar evento são irreversíveis: confirmar antes."
+          ]
+        },
+        {
+          "titulo": "Chave não é permissão",
+          "texto": [
+            "Nenhuma API sem autorização explícita daquele serviço e finalidade. Ter a credencial no .env não autoriza usá-la; pedido de resultado (\"faça\", \"continue\") também não.",
+            "A regra vale para scripts, subagentes e qualquer ferramenta intermediária."
+          ]
+        },
+        {
+          "titulo": "Parar e chamar",
+          "texto": [
+            "Num loop longo, para e chama o humano: gasto de crédito ou API, ação irreversível ou externa, credencial ausente, decisão de negócio.",
+            "E duas regras de convivência: não apague o que você não criou; não mate processo que você não criou."
+          ],
+          "exemplo": {
+            "rot": "Lição real (15/10/2026)",
+            "texto": "Matar processo só depois de readlink /proc/[pid]/cwd mostrar que é seu: o servidor de outra sessão foi derrubado por engano, achando que era o próprio."
+          }
+        },
+        {
+          "titulo": "Volta não é desfazer",
+          "texto": [
+            "git checkout [arquivo] volta ao último commit, não ao estado de antes do teste: em 05/10/2026 apagou regras não commitadas. Teste destrutivo: commit antes ou cópia fora.",
+            "Por isso a guarda da aula 5 nega checkout -- . e reset --hard."
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Fora do terminal: teto e sandbox juntos",
+      "sub": "O systemd dá o teto (tempo, memória); o sandbox do Codex, dentro dele, dá o isolamento que o systemd do usuário não deu nesta máquina (aula 6).",
+      "blocos": [
+        {
+          "rot": "Terminal · teto e isolamento no systemd",
+          "icone": "relogio",
+          "conteudo": "P=~/projetos/loop-r-eng-seguranca-v72/kit/prova-isolamento.sh\nW=/tmp/ensaio-seg/iso; mkdir -p $W\necho \"## teto de tempo: RuntimeMaxSec=3 num sleep 10\"\nsystemd-run --user --wait --pipe --quiet -p RuntimeMaxSec=3 sleep 10; echo \"saída: $?\"\necho \"## fora do terminal, com teto E sandbox do Codex dentro\"\nbash $P systemd-run --user --pipe --wait --quiet -p MemoryMax=1G -p RuntimeMaxSec=60 -- \\\n  codex sandbox -P :workspace -C $W --\necho \"saída: $?\""
+        },
+        {
+          "rot": "Arquivo · kit/systemd/loop-seguro.service (modelo)",
+          "icone": "arquivo",
+          "conteudo": "# loop-seguro.service — modelo de unit de usuário para rodar um ciclo do agente fora do terminal\n# sem aumentar o raio de dano. Troque MEU-PROJETO e confira com o prova-isolamento.sh ANTES de ligar.\n#   cp loop-seguro.service ~/.config/systemd/user/ && systemctl --user daemon-reload\n#   systemctl --user start loop-seguro.service && journalctl --user -u loop-seguro -n 20\n#\n# O que segura de verdade (testado em 19/10/2026, systemd 255, Ubuntu, kernel com\n# apparmor_restrict_unprivileged_userns=1):\n#   - tetos: MemoryMax, TimeoutStartSec (oneshot não aceita RuntimeMaxSec), timeout e flock (funcionam no systemd --user)\n#   - isolamento: o sandbox do Codex (-s workspace-write) DENTRO do serviço\n# O que NÃO segurou nesta máquina: PrivateNetwork=, ProtectHome=, IPAddressDeny= no systemd --user.\n# O journal diz \"proceeding without\" e o serviço roda sem a trava. Não conte com elas sem prova.\n[Unit]\nDescription=Um ciclo do loop do agente (curso Segurança do Loop Autônomo)\n\n[Service]\nType=oneshot\nWorkingDirectory=%h/projetos/MEU-PROJETO\n# PATH fixo: o serviço não herda o seu shell (nem as suas chaves). Não ponha EnvironmentFile com segredo.\nEnvironment=PATH=%h/.npm-global/bin:/usr/local/bin:/usr/bin:/bin\nStandardInput=file:%h/projetos/MEU-PROJETO/longrun/prompt.md\nExecStart=/usr/bin/flock -n %t/loop-seguro.lock timeout 2h codex exec -s workspace-write --skip-git-repo-check -C %h/projetos/MEU-PROJETO -\nMemoryMax=4G\nTimeoutStartSec=3h\nNoNewPrivileges=yes"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>## teto de tempo: RuntimeMaxSec=3 num sleep 10\nsaída: 1\n## fora do terminal, com teto E sandbox do Codex dentro\n  escreve-dentro ABERTO\n  escreve-fora BLOQUEADO\n  rede BLOQUEADO\n  le-segredo ABERTO\n  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede\nISOLAMENTO: OK\nsaída: 0</pre><p>O sleep 10 foi morto aos 3 s (saída 1). Dentro do mesmo systemd-run, o sandbox do Codex bloqueou escrita fora e rede.</p>"
+          },
+          {
+            "rot": "Erro comum: RuntimeMaxSec em oneshot",
+            "html": "<p>Num serviço Type=oneshot, RuntimeMaxSec= não tem efeito: o <code>systemd-analyze --user verify</code> avisa \"RuntimeMaxSec= has no effect in combination with Type=oneshot. Ignoring.\" No modelo de unit, o teto é TimeoutStartSec= mais o timeout na linha do comando.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Routines e outros agendadores",
+      "sub": "O que dá para dizer com segurança.",
+      "passos": [
+        {
+          "titulo": "O que se sabe",
+          "texto": [
+            "Há relatos (fonte secundária, não confirmada na doc) de agentes agendados na nuvem do Claude Code, as routines, com gatilho por agenda, API ou evento do GitHub.",
+            "Os limites atuais não foram confirmados para este curso: trate como recurso a conferir na doc antes de usar."
+          ]
+        },
+        {
+          "titulo": "A mesma regra",
+          "texto": [
+            "Onde quer que o loop rode, ele leva só o que a etapa precisa: sem as suas chaves, sem rede onde lê dado privado, sem ação irreversível fora da porta.",
+            "Agendar não muda a Regra de Dois; só tira você de perto. Mais motivo para a porta."
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "A porta, o systemd e a sua lista de irreversíveis.",
+      "exercicios": [
+        {
+          "id": "e18",
+          "titulo": "E18 · A porta no ensaio",
+          "min": "10 min",
+          "texto": "Rode o ensaio da porta. Depois aprove um pedido você mesmo, no seu terminal: python3 porta.py pedir, aprovar e executar.",
+          "pronto": "o ensaio mostra quatro linhas <code>RECUSADO</code>, uma <code>EXECUTADO</code> e termina em <code>1</code>; o seu <code>executar</code> imprime <code>EXECUTADO</code> uma vez e, repetido, <code>sem aprovação humana</code>."
+        },
+        {
+          "id": "e19",
+          "titulo": "E19 · Teto e sandbox no systemd",
+          "min": "10 min",
+          "texto": "Rode o bloco do systemd na sua máquina (Linux com systemd).",
+          "pronto": "o primeiro passo termina em <code>saída: 1</code> (morto pelo teto) e o segundo em <code>ISOLAMENTO: OK</code> e <code>saída: 0</code>."
+        },
+        {
+          "id": "e20",
+          "titulo": "E20 · A lista dos seus irreversíveis",
+          "min": "15 min",
+          "texto": "Escreva no AGENTS.md (ou CLAUDE.md) do projeto a lista das ações do seu loop que não têm volta e o caminho de cada uma: porta.py, deny da aula 4 ou guarda da aula 5.",
+          "pronto": "<code>grep -ci \"irreversível\" AGENTS.md</code> → um número maior que <code>0</code>, e cada ação da lista aparece num deny, na guarda ou num <code>porta.py pedir</code>."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "perguntas": [
+        {
+          "p": "Por que a aprovação guarda o hash do conteúdo?",
+          "opcoes": [
+            "Para ficar mais rápido",
+            "Para recusar se o conteúdo mudar depois de aprovado",
+            "Para criptografar o envio",
+            "Por exigência do Git"
+          ],
+          "certa": 1,
+          "explica": "Você aprova o que leu. Se alguém (ou o agente) muda o texto depois, o executar recusa: \"o conteúdo mudou depois da aprovação\".",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "O tty exigido no aprovar é a fronteira de segurança?",
+          "opcoes": [
+            "Sim, o agente nunca tem tty",
+            "Não: é lombada; a fronteira é PORTA_DIR fora do alcance de escrita do agente",
+            "Sim, se for Linux",
+            "Não existe fronteira"
+          ],
+          "certa": 1,
+          "explica": "Um pseudo-terminal finge um tty (o ensaio usa script). O que segura é o agente não conseguir escrever a aprovação, porque a pasta está fora do sandbox dele.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "O loop vai para o systemd. O que precisa ir junto?",
+          "opcoes": [
+            "As suas chaves, para não falhar",
+            "Teto de tempo e memória, sandbox provado e a porta",
+            "Só o PATH",
+            "Nada: fora do terminal é mais seguro"
+          ],
+          "certa": 1,
+          "explica": "Fora do terminal você não está olhando. O raio de dano tem de caber no teto, no sandbox e na porta, não na sua sessão.",
+          "ref": "codigo"
+        },
+        {
+          "p": "Num Type=oneshot, qual teto de tempo o systemd respeita?",
+          "opcoes": [
+            "RuntimeMaxSec",
+            "TimeoutStartSec (e o timeout na linha do comando)",
+            "MemoryMax",
+            "Nenhum"
+          ],
+          "certa": 1,
+          "explica": "O systemd-analyze avisa que RuntimeMaxSec é ignorado em oneshot. MemoryMax é teto de memória, não de tempo.",
+          "ref": "codigo"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        {
+          "t": "Pedir ≠ executar",
+          "texto": "O agente pede; você aprova o conteúdo exato; executa uma vez."
+        },
+        {
+          "t": "Fronteira, não lombada",
+          "texto": "A aprovação mora onde o agente não escreve."
+        },
+        {
+          "t": "Leve o teto junto",
+          "texto": "Fora do terminal: timeout, MemoryMax, sandbox provado e a porta."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        {
+          "t": "Curso 2, aula 6: o loop headless (loop-longrun.sh, flock, MemoryMax)",
+          "href": "https://inematds.github.io/loop-r-eng-execucao-longa-v72/aulas/headless/",
+          "icone": "robo"
+        },
+        {
+          "t": "inema-agent-runtime: receita R5, navegador com política",
+          "href": "https://github.com/inematds/inema-agent-runtime/blob/main/runtime/receitas/R5-navegador-com-politica.md",
+          "icone": "escudo"
+        },
+        {
+          "t": "kit/porta/porta.py",
+          "href": "https://github.com/inematds/loop-r-eng-seguranca-v72/blob/main/kit/porta/porta.py",
+          "icone": "arquivo"
+        }
+      ]
+    }
+  ]
+}

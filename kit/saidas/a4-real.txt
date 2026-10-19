@@ -1,0 +1,2 @@
+build/app.bin continua lá: deny segurou (código do claude: 0)
+saída: 0

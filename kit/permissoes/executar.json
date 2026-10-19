@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(src/**)",
+      "Bash(python3 -m pytest *)",
+      "Bash(git status *)",
+      "Bash(git diff *)"
+    ],
+    "ask": [
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Bash(rm *)",
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(git clean *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "WebFetch",
+      "Edit(tests/**)",
+      "Edit(goal.md)",
+      "Edit(.claude/**)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(~/.ssh/**)"
+    ]
+  }
+}

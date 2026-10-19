@@ -1,0 +1,14 @@
+onde                               servidor                privado  terceiros   saída  transporte
+-------------------------------------------------------------------------------------------------
+Claude Code (global)               gmail                    talvez     talvez  talvez  npx gmail-mcp
+Claude Code (global)               fetch                         -     talvez  talvez  uvx mcp-server-fetch
+Claude Code (global)               postgres-clientes        talvez          -       -  npx @modelcontextprotocol/server-postgre
+Codex CLI                          playwright                    -     talvez  talvez  npx @playwright/mcp
+
+Palpite somado do conjunto (o agente que enxerga TODOS esses servidores ao mesmo tempo):
+  [x] dados privados
+  [x] conteúdo de terceiros
+  [x] canal de saída
+
+  As três pernas podem estar juntas. Confirme linha a linha e corte uma perna (ver CHECKLIST.md).
+8

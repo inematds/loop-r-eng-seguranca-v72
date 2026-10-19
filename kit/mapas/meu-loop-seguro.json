@@ -1,0 +1,95 @@
+{
+  "loop": "corretor noturno de bugs (depois da auditoria, fictício)",
+  "sessoes": [
+    {
+      "nome": "leitor",
+      "ferramentas": [
+        {
+          "nome": "ler o texto da issue",
+          "terceiros": true
+        },
+        {
+          "nome": "gravar tarefa.json (só campos)",
+          "muda_estado": true
+        }
+      ],
+      "controles": {
+        "motor": "codex",
+        "sandbox": "workspace-write",
+        "prova_isolamento": "2026-10-19 OK",
+        "rede": false,
+        "tetos": {
+          "tempo": "20m",
+          "memoria": "1G"
+        }
+      }
+    },
+    {
+      "nome": "corretor",
+      "nova_sessao": true,
+      "ferramentas": [
+        {
+          "nome": "ler tarefa.json"
+        },
+        {
+          "nome": "ler o repositório privado",
+          "privado": true
+        },
+        {
+          "nome": "editar e rodar testes",
+          "muda_estado": true
+        }
+      ],
+      "controles": {
+        "motor": "claude",
+        "deny": [
+          "Bash(rm *)",
+          "Bash(git push *)",
+          "Bash(curl *)",
+          "WebFetch",
+          "Read(./.env)"
+        ],
+        "hooks": [
+          "guarda.py",
+          "raio.mjs"
+        ],
+        "prova_isolamento": "2026-10-19 OK",
+        "rede": false,
+        "tetos": {
+          "tempo": "2h",
+          "memoria": "4G"
+        }
+      }
+    },
+    {
+      "nome": "publicar",
+      "humano": true,
+      "ferramentas": [
+        {
+          "nome": "ler o diff",
+          "privado": true
+        },
+        {
+          "nome": "pedir git push e PR pela porta.py (o humano executa)",
+          "saida": true,
+          "muda_estado": true
+        },
+        {
+          "nome": "ler comentários do PR",
+          "terceiros": true
+        }
+      ],
+      "controles": {
+        "motor": "codex",
+        "sandbox": "read-only",
+        "prova_isolamento": "2026-10-19 OK",
+        "rede": false,
+        "porta": true,
+        "tetos": {
+          "tempo": "10m",
+          "memoria": "1G"
+        }
+      }
+    }
+  ]
+}

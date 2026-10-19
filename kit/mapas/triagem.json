@@ -1,0 +1,14 @@
+{
+  "loop": "triagem de issues (exemplo do curso, fictício)",
+  "sessoes": [
+    {
+      "nome": "triagem",
+      "ferramentas": [
+        { "nome": "ler issues abertas do GitHub", "terceiros": true },
+        { "nome": "ler o repositório e o .env", "privado": true },
+        { "nome": "comentar na issue", "saida": true, "muda_estado": true },
+        { "nome": "abrir URL (fetch)", "terceiros": true, "saida": true }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+app.txt: mudança não commitada preservada
+build/a.o: continua lá
+saída: 0

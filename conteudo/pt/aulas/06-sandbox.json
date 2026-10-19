@@ -1,0 +1,280 @@
+{
+  "slug": "sandbox",
+  "num": 6,
+  "menu": "Sandbox",
+  "titulo": "Sandbox de rede e de arquivos",
+  "titulo_curto": "Sandbox provado",
+  "minutos": 20,
+  "lead": "Regra e hook leem o comando; o sandbox não lê nada: o sistema operacional simplesmente não deixa o processo escrever fora da pasta nem abrir a rede. Mas sandbox também falha em silêncio. Nesta aula você prova, com quatro tentativas de fuga, o que segura na sua máquina, e vê duas travas que não seguraram nesta.",
+  "objetivo": "provar na sua máquina que o sandbox bloqueia escrita fora da pasta e rede, em vez de confiar na flag.",
+  "competencias": [
+    "provar-isolamento-por-tentativa-de-fuga",
+    "usar-o-sandbox-do-codex",
+    "ligar-o-sandbox-do-claude-code-com-falha-explicita"
+  ],
+  "aprende": [
+    {
+      "icone": "pasta",
+      "t": "Arquivos e rede: as duas fronteiras do sandbox"
+    },
+    {
+      "icone": "terminal",
+      "t": "prova-isolamento.sh: quatro sondas, um veredito"
+    },
+    {
+      "icone": "x",
+      "t": "Duas travas que não seguraram aqui: systemd --user e Claude sem socat"
+    },
+    {
+      "icone": "cadeado",
+      "t": "O que o sandbox não cobre: ler fora da pasta"
+    }
+  ],
+  "hero_alt": "Caixa de luvas de laboratório em acrílico e aço com uma placa de circuito dentro, sobre bancada escura.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Quatro tentativas de fuga",
+      "sub": "Clique em cada sonda.",
+      "nos": [
+        {
+          "icone": "pasta",
+          "titulo": "Escreve dentro",
+          "sub": "tem de abrir",
+          "detalhe": "Criar um arquivo na pasta de trabalho. O loop precisa disso para trabalhar; bloqueado aqui só serve para planejar e revisar."
+        },
+        {
+          "icone": "x",
+          "titulo": "Escreve fora",
+          "sub": "tem de bloquear",
+          "detalhe": "Criar um arquivo no seu HOME. Se passa, o agente alcança ~/.bashrc, ~/.ssh e o resto do seu disco."
+        },
+        {
+          "icone": "nuvem",
+          "titulo": "Rede",
+          "sub": "tem de bloquear",
+          "detalhe": "Um HTTP para example.com. Se passa, a perna da saída da tríade está aberta, mesmo sem ferramenta de envio."
+        },
+        {
+          "icone": "cadeado",
+          "titulo": "Lê segredo",
+          "sub": "só aviso",
+          "forte": true,
+          "detalhe": "Ler um segredo falso em ~/.config. Os sandboxes testados deixam ler fora da pasta. Com a rede cortada, ler não vaza; mesmo assim, tire segredo do alcance."
+        }
+      ],
+      "volta": "ISOLAMENTO: OK só com escreve-fora e rede BLOQUEADOS",
+      "legenda": "A pesquisa (item 24) registra sandbox e allowlist falhando em 2026; a conclusão prática é provar a trava, não pedir mais confirmação."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Ensaio: a mesma prova com quatro travas",
+      "sub": "Sem trava, sandbox do Codex nos perfis :read-only e :workspace, e systemd-run com PrivateNetwork e ProtectHome. Nenhum modelo.",
+      "blocos": [
+        {
+          "rot": "Terminal · quatro travas",
+          "icone": "play",
+          "conteudo": "P=~/projetos/loop-r-eng-seguranca-v72/kit/prova-isolamento.sh\nW=/tmp/ensaio-seg/iso; mkdir -p $W\necho \"## sem trava\"; bash $P; echo \"saída: $?\"\necho \"## codex sandbox :read-only\"; bash $P codex sandbox -P :read-only -C $W --; echo \"saída: $?\"\necho \"## codex sandbox :workspace\"; bash $P codex sandbox -P :workspace -C $W --; echo \"saída: $?\"\necho \"## systemd-run PrivateNetwork + ProtectHome\"\nbash $P systemd-run --user --pipe --wait --quiet -p PrivateNetwork=yes -p ProtectHome=read-only --\necho \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>## sem trava\n  escreve-dentro ABERTO\n  escreve-fora ABERTO\n  rede ABERTO\n  le-segredo ABERTO\n  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede\nISOLAMENTO: FURADO (2 fuga(s))\nsaída: 1\n## codex sandbox :read-only\n  escreve-dentro BLOQUEADO\n  escreve-fora BLOQUEADO\n  rede BLOQUEADO\n  le-segredo ABERTO\n  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede\n  aviso: nem a pasta de trabalho é gravável (bom para revisar, não para executar)\nISOLAMENTO: OK\nsaída: 0\n## codex sandbox :workspace\n  escreve-dentro ABERTO\n  escreve-fora BLOQUEADO\n  rede BLOQUEADO\n  le-segredo ABERTO\n  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede\nISOLAMENTO: OK\nsaída: 0\n## systemd-run PrivateNetwork + ProtectHome\n  escreve-dentro ABERTO\n  escreve-fora ABERTO\n  rede ABERTO\n  le-segredo ABERTO\n  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede\nISOLAMENTO: FURADO (2 fuga(s))\nsaída: 1</pre><p>codex-cli 0.163.0, systemd 255. O systemd aceitou as flags e rodou sem elas; o journal registrou \"PrivateNetwork=yes is configured, but the kernel does not support or we lack privileges for network namespace, proceeding without\".</p>"
+          },
+          {
+            "rot": "Por que o systemd falhou aqui",
+            "html": "<p>Neste Ubuntu, <code>kernel.apparmor_restrict_unprivileged_userns=1</code> impede o systemd do usuário de criar os namespaces. O Codex só funciona aqui porque o bubblewrap ganhou um perfil AppArmor próprio (01/10/2026). Em outra máquina pode ser o contrário: por isso a prova roda na sua.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Codex, Claude Code e o que cada um isola",
+      "sub": "Pela doc de cada um, lida em 19/10/2026.",
+      "passos": [
+        {
+          "titulo": "Codex",
+          "texto": [
+            "codex exec -s read-only ou -s workspace-write roda os comandos do modelo num sandbox (no Linux, bubblewrap com filtro seccomp, diz a doc do codex sandbox). A doc recomenda workspace-write para trabalho local sem supervisão e reserva o --yolo para runner já isolado.",
+            "codex sandbox -P [perfil] -- [comando] roda um comando seu no sandbox, sem modelo: é o que o ensaio usa. Os perfis :read-only e :workspace foram observados no 0.163.0."
+          ]
+        },
+        {
+          "titulo": "Claude Code",
+          "texto": [
+            "sandbox.enabled põe os comandos do Bash numa fronteira do sistema: escrita limitada e rede só por um proxy com lista de domínios. No Linux depende de bubblewrap e socat.",
+            "O sandbox cobre comandos de shell; as ferramentas de arquivo, MCP e hooks rodam fora dele (doc). Para elas, valem as regras da aula 4."
+          ]
+        },
+        {
+          "titulo": "Falhar alto",
+          "texto": [
+            "Por padrão, se o sandbox do Claude Code não consegue subir, ele roda os comandos sem sandbox. Com sandbox.failIfUnavailable: true, recusa iniciar.",
+            "No loop, ligue o failIfUnavailable: trava ausente tem de parar o loop, não deixá-lo rodar aberto."
+          ],
+          "exemplo": {
+            "rot": "Doc do Claude Code",
+            "texto": "\"By default, if the sandbox can't start because a dependency is missing or the platform is unsupported, Claude Code runs commands without sandboxing.\""
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Claude Code: sandbox com falha explícita",
+      "sub": "Nesta máquina falta o socat. Com failIfUnavailable, o Claude Code recusa iniciar antes de qualquer chamada ao modelo (não gasta cota).",
+      "blocos": [
+        {
+          "rot": "Terminal · pedir sandbox e exigir que exista",
+          "icone": "cadeado",
+          "conteudo": "cd /tmp/ensaio-seg/iso\nclaude --settings '{\"sandbox\":{\"enabled\":true,\"failIfUnavailable\":true}}' -p \"responda só: ok\" --tools \"\"\necho \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>Error: sandbox required but unavailable: sandbox is enabled but dependencies are missing: socat not installed · install missing tools (e.g. apt install bubblewrap socat) or see https://code.claude.com/docs/en/sandboxing\n  sandbox.failIfUnavailable is set — refusing to start without a working sandbox.\n\nsaída: 1</pre><p>Claude Code 2.1.303. Sem o failIfUnavailable, pela doc, a mesma sessão teria rodado os comandos sem sandbox.</p>"
+          },
+          {
+            "rot": "Com as dependências",
+            "html": "<p>Instale bubblewrap e socat (o próprio erro sugere <code>apt install bubblewrap socat</code>) e rode de novo: a sessão sobe e responde. Depois, peça ao Claude para rodar as sondas do prova-isolamento.sh, uma de cada vez, e confira BLOQUEADO em escreve-fora e rede.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "As quatro travas na sua máquina e a trava do seu loop.",
+      "exercicios": [
+        {
+          "id": "e15",
+          "titulo": "E15 · Prova das quatro travas",
+          "min": "10 min",
+          "texto": "Rode o ensaio. Anote quais travas deram OK na sua máquina; o resultado do systemd pode ser diferente do daqui.",
+          "pronto": "\"sem trava\" termina em <code>ISOLAMENTO: FURADO (2 fuga(s))</code> e <code>saída: 1</code>; \"codex sandbox :workspace\" em <code>escreve-dentro ABERTO</code>, <code>ISOLAMENTO: OK</code> e <code>saída: 0</code>."
+        },
+        {
+          "id": "e16",
+          "titulo": "E16 · Claude Code falha alto",
+          "min": "10 min",
+          "texto": "Rode o bloco do Claude Code. Se recusar iniciar, instale as dependências que o erro pede e rode de novo.",
+          "pronto": "sem as dependências: <code>refusing to start without a working sandbox</code> e <code>saída: 1</code>; com elas: <code>saída: 0</code>."
+        },
+        {
+          "id": "e17",
+          "titulo": "E17 · A trava do seu loop",
+          "min": "10 min",
+          "texto": "Rode o prova-isolamento.sh com o mesmo wrapper que o seu loop usa para chamar o agente (o mesmo -s do Codex, o mesmo systemd-run). Anote a data e o resultado no mapa (\"prova_isolamento\"), para a aula 8.",
+          "pronto": "<code>bash $P [wrapper do seu loop] --; echo $?</code> → <code>ISOLAMENTO: OK</code> e <code>0</code>."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "perguntas": [
+        {
+          "p": "O systemd aceitou PrivateNetwork=yes sem erro. A rede está cortada?",
+          "opcoes": [
+            "Sim, a flag foi aceita",
+            "Só a prova diz: aqui ela rodou sem a trava e a rede passou",
+            "Só se for root",
+            "Sim, se o serviço for oneshot"
+          ],
+          "certa": 1,
+          "explica": "O systemd do usuário seguiu sem o namespace e só registrou no journal. Flag aceita não é trava de pé: a tentativa de fuga é que decide.",
+          "ref": "codigo",
+          "cert": true
+        },
+        {
+          "p": "O que o Claude Code faz, por padrão, se o sandbox não consegue subir?",
+          "opcoes": [
+            "Recusa iniciar",
+            "Roda os comandos sem sandbox",
+            "Pede a senha",
+            "Roda só leitura"
+          ],
+          "certa": 1,
+          "explica": "Por padrão segue sem sandbox. sandbox.failIfUnavailable: true faz recusar iniciar, que é o que um loop sem supervisão precisa.",
+          "ref": "passos",
+          "cert": true
+        },
+        {
+          "p": "No perfil :workspace, o agente consegue ler um segredo em ~/.config. O que fazer?",
+          "opcoes": [
+            "Nada, ler não faz mal",
+            "Cortar a rede e tirar segredos do alcance da sessão",
+            "Trocar para danger-full-access",
+            "Desligar o sandbox"
+          ],
+          "certa": 1,
+          "explica": "Ler não vaza se não houver saída. Com a rede cortada pelo mesmo sandbox e o segredo fora do alcance, a tríade não fecha.",
+          "ref": "diagrama"
+        },
+        {
+          "p": "Qual a diferença entre o sandbox e a regra deny da aula 4?",
+          "opcoes": [
+            "Nenhuma",
+            "A regra casa o texto do comando; o sandbox é o sistema operacional barrando o processo, seja qual for o texto",
+            "O sandbox é mais lento",
+            "A regra vale só no Codex"
+          ],
+          "certa": 1,
+          "explica": "find -delete, python3 -c ou um script que apaga passam por regra de texto; não passam por um sistema de arquivos só leitura.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        {
+          "t": "Prove, não confie",
+          "texto": "Quatro tentativas de fuga dizem se a trava está de pé na sua máquina."
+        },
+        {
+          "t": "Falhe alto",
+          "texto": "failIfUnavailable no Claude Code; -s explícito no Codex."
+        },
+        {
+          "t": "Ler continua aberto",
+          "texto": "Segredo fora do alcance e rede cortada, juntos."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        {
+          "t": "Claude Code: Configure the sandboxed Bash tool (doc oficial)",
+          "href": "https://code.claude.com/docs/en/sandboxing",
+          "icone": "lupa"
+        },
+        {
+          "t": "Codex CLI: referência (codex sandbox, -s)",
+          "href": "https://developers.openai.com/codex/cli/reference",
+          "icone": "terminal"
+        },
+        {
+          "t": "LangChain: como escolher o sandbox do seu agente",
+          "href": "https://langchain.com/blog/how-to-choose-the-right-sandbox-for-your-agent",
+          "icone": "lupa"
+        },
+        {
+          "t": "kit/prova-isolamento.sh",
+          "href": "https://github.com/inematds/loop-r-eng-seguranca-v72/blob/main/kit/prova-isolamento.sh",
+          "icone": "arquivo"
+        }
+      ]
+    }
+  ]
+}

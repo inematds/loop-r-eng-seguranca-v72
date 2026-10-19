@@ -1,0 +1,15 @@
+## guarda.py (nega o irreversível)
+git push --force origin main       → deny
+git reset --hard HEAD~3            → deny
+find . -name '*.o' -delete         → deny
+rm -rf ~                           → deny
+pkill -f servidor                  → deny
+python3 -m pytest -q               → -
+Edit tests/test_x.py               → deny
+Edit src/app.py                    → -
+## raio.mjs (apagar pede confirmação, com a contagem)
+rm -r build                        → ask
+rm -r nada                         → -
+## colisao.mjs (outra sessão editou há pouco)
+sessão B edita o mesmo arquivo    → ask
+sessão A edita de novo            → -

@@ -1,0 +1,24 @@
+# loop-seguro.service — modelo de unit de usuário para rodar um ciclo do agente fora do terminal
+# sem aumentar o raio de dano. Troque MEU-PROJETO e confira com o prova-isolamento.sh ANTES de ligar.
+#   cp loop-seguro.service ~/.config/systemd/user/ && systemctl --user daemon-reload
+#   systemctl --user start loop-seguro.service && journalctl --user -u loop-seguro -n 20
+#
+# O que segura de verdade (testado em 19/10/2026, systemd 255, Ubuntu, kernel com
+# apparmor_restrict_unprivileged_userns=1):
+#   - tetos: MemoryMax, TimeoutStartSec (oneshot não aceita RuntimeMaxSec), timeout e flock (funcionam no systemd --user)
+#   - isolamento: o sandbox do Codex (-s workspace-write) DENTRO do serviço
+# O que NÃO segurou nesta máquina: PrivateNetwork=, ProtectHome=, IPAddressDeny= no systemd --user.
+# O journal diz "proceeding without" e o serviço roda sem a trava. Não conte com elas sem prova.
+[Unit]
+Description=Um ciclo do loop do agente (curso Segurança do Loop Autônomo)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/projetos/MEU-PROJETO
+# PATH fixo: o serviço não herda o seu shell (nem as suas chaves). Não ponha EnvironmentFile com segredo.
+Environment=PATH=%h/.npm-global/bin:/usr/local/bin:/usr/bin:/bin
+StandardInput=file:%h/projetos/MEU-PROJETO/longrun/prompt.md
+ExecStart=/usr/bin/flock -n %t/loop-seguro.lock timeout 2h codex exec -s workspace-write --skip-git-repo-check -C %h/projetos/MEU-PROJETO -
+MemoryMax=4G
+TimeoutStartSec=3h
+NoNewPrivileges=yes

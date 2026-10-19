@@ -1,0 +1,33 @@
+## sem trava
+  escreve-dentro ABERTO
+  escreve-fora ABERTO
+  rede ABERTO
+  le-segredo ABERTO
+  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede
+ISOLAMENTO: FURADO (2 fuga(s))
+saída: 1
+## codex sandbox :read-only
+  escreve-dentro BLOQUEADO
+  escreve-fora BLOQUEADO
+  rede BLOQUEADO
+  le-segredo ABERTO
+  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede
+  aviso: nem a pasta de trabalho é gravável (bom para revisar, não para executar)
+ISOLAMENTO: OK
+saída: 0
+## codex sandbox :workspace
+  escreve-dentro ABERTO
+  escreve-fora BLOQUEADO
+  rede BLOQUEADO
+  le-segredo ABERTO
+  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede
+ISOLAMENTO: OK
+saída: 0
+## systemd-run PrivateNetwork + ProtectHome
+  escreve-dentro ABERTO
+  escreve-fora ABERTO
+  rede ABERTO
+  le-segredo ABERTO
+  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede
+ISOLAMENTO: FURADO (2 fuga(s))
+saída: 1

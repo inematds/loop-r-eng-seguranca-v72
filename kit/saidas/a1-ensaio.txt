@@ -1,0 +1,9 @@
+## triagem
+triagem      privado:sim  terceiros:sim  saída:sim  → FECHA
+TRÍADE: violada em triagem
+saída: 1
+## triagem-cortada
+leitor       privado:não  terceiros:sim  saída:não  → OK
+respondente  privado:sim  terceiros:não  saída:sim  → OK
+TRÍADE: nenhuma sessão autônoma com as três (2 sessões)
+saída: 0

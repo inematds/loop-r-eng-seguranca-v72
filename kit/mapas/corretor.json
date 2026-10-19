@@ -1,0 +1,13 @@
+{
+  "loop": "corretor noturno de bugs (exemplo do curso, fictício)",
+  "sessoes": [
+    {
+      "nome": "corretor",
+      "ferramentas": [
+        { "nome": "ler o texto da issue (escrito por qualquer pessoa)", "terceiros": true },
+        { "nome": "ler o repositório privado", "privado": true },
+        { "nome": "editar arquivos e rodar comandos no repositório", "muda_estado": true }
+      ]
+    }
+  ]
+}

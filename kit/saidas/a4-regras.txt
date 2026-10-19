@@ -1,0 +1,20 @@
+## deny só com Bash(rm -rf *)
+deny      Bash(rm -rf *)         ← rm -rf build
+  saída: 1
+sem regra -                      ← rm -r -f build
+  saída: 4
+sem regra -                      ← git push -f origin main
+  saída: 4
+## executar.json
+allow     Bash(python3 -m pytest *) ← python3 -m pytest -q
+  saída: 0
+deny      Bash(rm *)             ← rm -rf build
+  saída: 1
+deny      Bash(rm *)             ← rm -r -f build
+  saída: 1
+deny      Bash(curl *)           ← curl -s https://exemplo.invalid
+  saída: 1
+ask       Bash(git commit *)     ← git commit -m x
+  saída: 3
+sem regra -                      ← ls
+  saída: 4

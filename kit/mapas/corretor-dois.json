@@ -1,0 +1,30 @@
+{
+  "loop": "corretor noturno de bugs, em duas sessões",
+  "sessoes": [
+    {
+      "nome": "leitor",
+      "ferramentas": [
+        { "nome": "ler o texto da issue (escrito por qualquer pessoa)", "terceiros": true },
+        { "nome": "gravar tarefa.json (arquivo, teste que falha, passos)", "muda_estado": true }
+      ]
+    },
+    {
+      "nome": "corretor",
+      "nova_sessao": true,
+      "ferramentas": [
+        { "nome": "ler tarefa.json (campos revisados por você)" },
+        { "nome": "ler o repositório privado", "privado": true },
+        { "nome": "editar arquivos e rodar comandos no repositório", "muda_estado": true }
+      ]
+    },
+    {
+      "nome": "publicar",
+      "humano": true,
+      "ferramentas": [
+        { "nome": "ler o diff", "privado": true },
+        { "nome": "git push e abrir PR", "saida": true, "muda_estado": true },
+        { "nome": "ler comentários de revisão no PR", "terceiros": true }
+      ]
+    }
+  ]
+}

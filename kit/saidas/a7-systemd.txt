@@ -1,0 +1,10 @@
+## teto de tempo: RuntimeMaxSec=3 num sleep 10
+saída: 1
+## fora do terminal, com teto E sandbox do Codex dentro
+  escreve-dentro ABERTO
+  escreve-fora BLOQUEADO
+  rede BLOQUEADO
+  le-segredo ABERTO
+  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede
+ISOLAMENTO: OK
+saída: 0

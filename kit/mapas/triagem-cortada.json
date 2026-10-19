@@ -1,0 +1,20 @@
+{
+  "loop": "triagem de issues, com a perna da saída cortada no leitor",
+  "sessoes": [
+    {
+      "nome": "leitor",
+      "ferramentas": [
+        { "nome": "ler issues abertas do GitHub", "terceiros": true },
+        { "nome": "gravar campos.json (rótulo, prioridade, arquivo citado)", "muda_estado": true }
+      ]
+    },
+    {
+      "nome": "respondente",
+      "ferramentas": [
+        { "nome": "ler campos.json (só campos, sem texto livre)" },
+        { "nome": "ler o repositório", "privado": true },
+        { "nome": "comentar na issue de origem (destino fixo no código)", "saida": true, "muda_estado": true }
+      ]
+    }
+  ]
+}

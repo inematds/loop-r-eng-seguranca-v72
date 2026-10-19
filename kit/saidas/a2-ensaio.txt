@@ -1,0 +1,14 @@
+corretor     privado:sim  terceiros:sim  saída:não  → OK
+TRÍADE: nenhuma sessão autônoma com as três (1 sessão)
+saída: 0
+## corretor (Regra de Dois)
+corretor     A terceiros:sim  B privado:sim  C muda/sai:sim  → FECHA
+REGRA DE DOIS: violada em corretor
+saída: 1
+## corretor-dois (Regra de Dois)
+leitor       A terceiros:sim  B privado:não  C muda/sai:sim  → OK
+corretor     A terceiros:não  B privado:sim  C muda/sai:sim  → OK
+publicar     A terceiros:sim  B privado:sim  C muda/sai:sim  → SUPERVISIONADA
+aviso: publicar tem as três, mas com humano aprovando cada ação
+REGRA DE DOIS: nenhuma sessão autônoma com as três (3 sessões)
+saída: 0

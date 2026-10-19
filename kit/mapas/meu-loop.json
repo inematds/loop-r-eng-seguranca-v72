@@ -1,0 +1,21 @@
+{
+  "loop": "corretor noturno de bugs (primeira versão, fictícia)",
+  "sessoes": [
+    {
+      "nome": "corretor",
+      "ferramentas": [
+        { "nome": "ler o texto da issue", "terceiros": true },
+        { "nome": "ler o repositório privado e o .env", "privado": true },
+        { "nome": "editar e rodar comandos", "muda_estado": true },
+        { "nome": "git push e comentar no PR", "saida": true, "muda_estado": true }
+      ],
+      "controles": {
+        "motor": "claude",
+        "deny": ["Bash(rm -rf *)"],
+        "hooks": [],
+        "rede": true,
+        "tetos": { "tempo": "2h" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+resposta-real.md: 3 linha(s)
+canário ausente em 1 arquivo(s) de saída
+saída: 0
