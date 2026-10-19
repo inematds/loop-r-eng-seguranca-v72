@@ -145,7 +145,7 @@
           "titulo": "E5 · Seu mapa na Regra de Dois",
           "min": "20 min",
           "texto": "Rode o seu ~/meu-mapa.json com --regra dois. Para cada sessão que reprovar, escolha: tirar uma letra, abrir sessão nova de contexto limpo (\"nova_sessao\": true) ou pôr humano (\"humano\": true). Anote a escolha no mapa.",
-          "pronto": "<code>python3 $K/triade.py ~/meu-mapa.json --regra dois; echo $?</code> → <code>REGRA DE DOIS: nenhuma sessão autônoma com as três</code> e <code>0</code>."
+          "pronto": "<code>K=~/projetos/loop-r-eng-seguranca-v72/kit; python3 $K/triade.py ~/meu-mapa.json --regra dois; echo $?</code> → <code>REGRA DE DOIS: nenhuma sessão autônoma com as três</code> e <code>0</code>."
         }
       ]
     },

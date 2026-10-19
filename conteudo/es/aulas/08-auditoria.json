@@ -113,14 +113,14 @@
           "titulo": "E22 · El mapa completo de tu loop",
           "min": "30 min",
           "texto": "Agrega a ~/meu-mapa.json de las lecciones 1 y 2 el bloque controles de cada sesión, con las pruebas que ya ejecutaste: deny de la lección 4, guardia de la lección 5, prueba de aislamiento de la lección 6, compuerta y topes de la lección 7.",
-          "pronto": "<code>python3 $K/auditar.py ~/meu-mapa.json --md SEGURANCA.md</code> imprime una línea <code>AUDITORIA:</code> y graba <code>SEGURANCA.md</code> en el proyecto."
+          "pronto": "<code>K=~/projetos/loop-r-eng-seguranca-v72/kit; python3 $K/auditar.py ~/meu-mapa.json --md SEGURANCA.md</code> imprime una línea <code>AUDITORIA:</code> y graba <code>SEGURANCA.md</code> en el proyecto."
         },
         {
           "id": "e23",
           "titulo": "E23 · Hasta aprobar, con fecha",
           "min": "60 min",
           "texto": "Corrige un ítem a la vez, en el orden de la lista, rehaciendo la prueba de la lección indicada. Haz commit de SEGURANCA.md y pon la próxima auditoría en el calendario (el generador de abajo hace el .ics).",
-          "pronto": "<code>python3 $K/auditar.py ~/meu-mapa.json; echo $?</code> → <code>APROVADA</code> y <code>0</code>, y <code>git log --oneline -1 -- SEGURANCA.md</code> muestra el commit."
+          "pronto": "<code>K=~/projetos/loop-r-eng-seguranca-v72/kit; python3 $K/auditar.py ~/meu-mapa.json; echo $?</code> → <code>APROVADA</code> y <code>0</code>, y <code>git log --oneline -1 -- SEGURANCA.md</code> muestra el commit."
         }
       ]
     },
@@ -310,7 +310,7 @@
       "links": [
         {
           "t": "Siguiente: curso 5, El loop que aprende (LOOP-R aplicado)",
-          "href": "https://inematds.github.io/loop-r-eng-aprende-v72/",
+          "href": "https://inematds.github.io/loop-r-eng-aprende-v72/es/",
           "icone": "seta"
         },
         {

@@ -173,7 +173,7 @@
           "titulo": "E3 · O mapa do seu loop",
           "min": "15 min",
           "texto": "Copie kit/mapas/triagem.json para ~/meu-mapa.json e descreva o seu loop: uma sessão por contexto, cada ferramenta com as pernas que marca. Se alguma sessão fechar, corte uma perna no mapa e no loop.",
-          "pronto": "<code>python3 $K/triade.py ~/meu-mapa.json; echo $?</code> → a última linha começa com <code>TRÍADE:</code> e o código é <code>0</code> (ou <code>1</code> com a sessão anotada para corrigir na aula 2)."
+          "pronto": "<code>K=~/projetos/loop-r-eng-seguranca-v72/kit; python3 $K/triade.py ~/meu-mapa.json; echo $?</code> → a última linha começa com <code>TRÍADE:</code> e o código é <code>0</code> (ou <code>1</code> com a sessão anotada para corrigir na aula 2)."
         }
       ]
     },

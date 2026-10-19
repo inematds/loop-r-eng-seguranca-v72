@@ -226,7 +226,7 @@
           "titulo": "E8 · Canary in your loop",
           "min": "15 min",
           "texto": "Put a fake, unique value (e.g., CANARIO-[something of yours]) in a file that your loop treats as a secret. After one run, search for the canary in everything that goes out: send logs, responses, comments, commits.",
-          "pronto": "<code>grep -rl \"CANARIO-\" [pastas de saída do seu loop] | wc -l</code> → <code>0</code>."
+          "pronto": "<code>grep -rl \"CANARIO-\" [your loop's output folders] | wc -l</code> → <code>0</code>."
         }
       ]
     },

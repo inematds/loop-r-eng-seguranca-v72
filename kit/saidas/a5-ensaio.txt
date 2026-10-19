@@ -7,6 +7,17 @@ pkill -f servidor                  → deny
 python3 -m pytest -q               → -
 Edit tests/test_x.py               → deny
 Edit src/app.py                    → -
+## guarda.py: escrita via Bash nos protegidos
+sed -i s/x/y/ tests/test_x.py      → deny
+echo pronto > goal.md              → deny
+echo {..} > .claude/settings.local → deny
+mv goal.md /tmp/                   → deny
+bash -c 'rm -rf ~'                 → deny
+git restore .                      → deny
+pytest -q tests/ > log.txt         → -
+git restore --staged app.py        → -
+## o que a guarda NÃO pega (para isso: deny Edit/Write da aula 4 e sandbox da aula 6)
+python3 -c open('goal.md','w')     → -
 ## raio.mjs (apagar pede confirmação, com a contagem)
 rm -r build                        → ask
 rm -r nada                         → -

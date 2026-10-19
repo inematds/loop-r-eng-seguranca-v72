@@ -9,6 +9,7 @@ When I correct you, or you catch yourself making a mistake: before continuing, a
 
 ## Lessons
 
+- Hook de guarda que só confere caminho em Edit/Write deixa passar `sed -i`, `echo >`, `mv` e `bash -c 'rm -rf ~'` pelo Bash: teste os furos no provar-guarda.sh e escreva na aula o que ele ainda NÃO pega (python3 -c, eval) e qual camada cobre (deny Edit da aula 4, sandbox da aula 6); prometer "fora do alcance" num curso de segurança é falsa garantia (revisão 19/10/2026).
 - Curso técnico com kit próprio (pasta `kit/` no repo do curso): escreva cada bloco "Terminal" como arquivo, rode-o para capturar a saída e compare o `conteudo` do JSON com esses arquivos antes do portão (deriva entre o bloco copiável e o que foi testado passa no `validar.py`). Passo com modelo real: "pronto quando" estrutural (código de saída, `grep -c`, `wc -l`), nunca o texto do modelo; e resposta ausente do modelo (limite da assinatura) é erro, não "nao" (19/10/2026, loop-r-eng-verificacao-v72).
 - Nome de ícone fora de `ICONES` do `gerar.py` (ex.: "estrela", "alerta", "codigo") passa pelo `validar.py` e sai sem ícone: confira a lista de chaves de `ICONES` antes do portão (curso formacao-inemaseo-ias-v72, 19/10/2026).
 - Diagrama com 8 nós (escada ou fluxo) no desktop dá uns 85 px por coluna: `sub` com mais de duas palavras quebra palavra por palavra e o diagrama fica ilegível. Use subs de 1–2 palavras curtas e ponha a explicação no `detalhe`; e não escreva "de cima/de baixo" no `sub` da seção, porque no desktop os nós ficam lado a lado (G0 gestao-ia-base-v72, 19/10/2026).

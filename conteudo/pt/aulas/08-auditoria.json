@@ -113,14 +113,14 @@
           "titulo": "E22 · O mapa completo do seu loop",
           "min": "30 min",
           "texto": "Acrescente ao ~/meu-mapa.json das aulas 1 e 2 o bloco controles de cada sessão, com as provas que você já rodou: deny da aula 4, guarda da aula 5, prova de isolamento da aula 6, porta e tetos da aula 7.",
-          "pronto": "<code>python3 $K/auditar.py ~/meu-mapa.json --md SEGURANCA.md</code> imprime uma linha <code>AUDITORIA:</code> e grava <code>SEGURANCA.md</code> no projeto."
+          "pronto": "<code>K=~/projetos/loop-r-eng-seguranca-v72/kit; python3 $K/auditar.py ~/meu-mapa.json --md SEGURANCA.md</code> imprime uma linha <code>AUDITORIA:</code> e grava <code>SEGURANCA.md</code> no projeto."
         },
         {
           "id": "e23",
           "titulo": "E23 · Até aprovar, com data",
           "min": "60 min",
           "texto": "Corrija um item por vez, na ordem da lista, refazendo a prova da aula indicada. Commite o SEGURANCA.md e ponha a próxima auditoria no calendário (o gerador abaixo faz o .ics).",
-          "pronto": "<code>python3 $K/auditar.py ~/meu-mapa.json; echo $?</code> → <code>APROVADA</code> e <code>0</code>, e <code>git log --oneline -1 -- SEGURANCA.md</code> mostra o commit."
+          "pronto": "<code>K=~/projetos/loop-r-eng-seguranca-v72/kit; python3 $K/auditar.py ~/meu-mapa.json; echo $?</code> → <code>APROVADA</code> e <code>0</code>, e <code>git log --oneline -1 -- SEGURANCA.md</code> mostra o commit."
         }
       ]
     },

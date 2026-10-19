@@ -19,7 +19,7 @@
     },
     {
       "icone": "x",
-      "t": "guarda.py: push forçado, reset --hard, find -delete, arquivos do juiz"
+      "t": "guarda.py: forced push, reset --hard, find -delete, the judge's files, and what it doesn't catch"
     },
     {
       "icone": "lupa",
@@ -87,8 +87,9 @@
         {
           "titulo": "guarda.py (deny)",
           "texto": [
-            "Denies what has no way back: forced push, reset --hard, git clean -f, checkout -- ., find -delete, recursive rm on the root or HOME, pkill and killall, dd and mkfs.",
-            "It also denies Edit/Write on goal.md, tests/, .claude/ and on the guard's own folder (GUARDA_PROTEGIDOS changes the list)."
+            "It denies what can't be undone: forced push, reset --hard, git clean -f, checkout -- ., git restore (of the tree), find -delete, recursive rm at the root or in HOME (quoted or inside bash -c), pkill and killall, dd and mkfs.",
+            "And it denies writing to goal.md, tests/, .claude/ and the guard's own folder, through Edit/Write and also through Bash: &gt; and &gt;&gt;, tee, sed -i, cp, mv, rm and truncate (GUARDA_PROTEGIDOS changes the list).",
+            "What it doesn't catch: the guard reads the text of the command, it is not a sandbox. A program that writes on its own (python3 -c \"open('goal.md','w')\", node -e, a script of yours), a path built in a variable, or eval gets through. That's why it comes together with the deny Edit(...) from lesson 4, which covers the file tools, and with the sandbox from lesson 6, which limits what Bash itself can write."
           ],
           "exemplo": {
             "rot": "A real lesson from this machine",
@@ -139,7 +140,7 @@
         "abas": [
           {
             "rot": "Captured output (10/19/2026)",
-            "html": "<pre>## guarda.py (nega o irreversível)\ngit push --force origin main       → deny\ngit reset --hard HEAD~3            → deny\nfind . -name '*.o' -delete         → deny\nrm -rf ~                           → deny\npkill -f servidor                  → deny\npython3 -m pytest -q               → -\nEdit tests/test_x.py               → deny\nEdit src/app.py                    → -\n## raio.mjs (apagar pede confirmação, com a contagem)\nrm -r build                        → ask\nrm -r nada                         → -\n## colisao.mjs (outra sessão editou há pouco)\nsessão B edita o mesmo arquivo    → ask\nsessão A edita de novo            → -</pre><p>\"-\" means no decision: the normal flow (rules and mode) decides. An rm on a folder that doesn't exist asks for nothing, because there is nothing to delete.</p>"
+            "html": "<pre>## guarda.py (nega o irreversível)\ngit push --force origin main       → deny\ngit reset --hard HEAD~3            → deny\nfind . -name '*.o' -delete         → deny\nrm -rf ~                           → deny\npkill -f servidor                  → deny\npython3 -m pytest -q               → -\nEdit tests/test_x.py               → deny\nEdit src/app.py                    → -\n## guarda.py: escrita via Bash nos protegidos\nsed -i s/x/y/ tests/test_x.py      → deny\necho pronto &gt; goal.md              → deny\necho {..} &gt; .claude/settings.local → deny\nmv goal.md /tmp/                   → deny\nbash -c 'rm -rf ~'                 → deny\ngit restore .                      → deny\npytest -q tests/ &gt; log.txt         → -\ngit restore --staged app.py        → -\n## o que a guarda NÃO pega (para isso: deny Edit/Write da aula 4 e sandbox da aula 6)\npython3 -c open('goal.md','w')     → -\n## raio.mjs (apagar pede confirmação, com a contagem)\nrm -r build                        → ask\nrm -r nada                         → -\n## colisao.mjs (outra sessão editou há pouco)\nsessão B edita o mesmo arquivo    → ask\nsessão A edita de novo            → -</pre><p>\"-\" means no decision: the normal flow (rules and mode) decides. pytest with output going to log.txt and git restore --staged pass, because they don't touch the protected files. The python3 -c line is the declared hole: the guard doesn't see what a program writes. An rm of a folder that doesn't exist doesn't ask anything, because there is nothing to delete.</p>"
           },
           {
             "rot": "Common mistake: a hook that only warns",
@@ -183,7 +184,7 @@
           "titulo": "E12 · Decisions of the three hooks",
           "min": "10 min",
           "texto": "Run the rehearsal. It clones inema-agent-runtime into ~/projetos if it's missing.",
-          "pronto": "six <code>→ deny</code> lines in the guard, <code>rm -r build → ask</code>, <code>sessão B edita o mesmo arquivo → ask</code> and <code>sessão A edita de novo → -</code>."
+          "pronto": "<code>bash ~/projetos/loop-r-eng-seguranca-v72/kit/hooks/provar-guarda.sh | grep -c '→ deny'</code> → <code>12</code>; and <code>rm -r build → ask</code>, <code>sessão B edita o mesmo arquivo → ask</code> and <code>sessão A edita de novo → -</code>."
         },
         {
           "id": "e13",
@@ -196,8 +197,8 @@
           "id": "e14",
           "titulo": "E14 · The guard in your project",
           "min": "15 min",
-          "texto": "Copy the hooks block from settings-exemplo.json into your project's .claude/settings.json. If your judge has other files, export GUARDA_PROTEGIDOS before opening Claude Code.",
-          "pronto": "<code>printf '{\"cwd\":\"%s\",\"tool_name\":\"Edit\",\"tool_input\":{\"file_path\":\"goal.md\"}}' \"$PWD\" | python3 $K/hooks/guarda.py | grep -c deny</code> → <code>1</code>, run in the project folder."
+          "texto": "In your project's .claude/settings.json, combine the permissions from executar.json in lesson 4 (deny Edit(goal.md), Edit(tests/**), Edit(.claude/**)) with the hooks block from settings-exemplo.json: the layers add up. If your judge has other files, export GUARDA_PROTEGIDOS before opening Claude Code.",
+          "pronto": "<code>K=~/projetos/loop-r-eng-seguranca-v72/kit; printf '{\"cwd\":\"%s\",\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"echo x &gt; goal.md\"}}' \"$PWD\" | python3 $K/hooks/guarda.py | grep -c deny</code> → <code>1</code> and <code>grep -c 'Edit(goal.md)' .claude/settings.json</code> → <code>1</code>, run in the project folder."
         }
       ]
     },
@@ -240,7 +241,7 @@
             "To be faster"
           ],
           "certa": 1,
-          "explica": "A guard within the agent's reach is a guard it can remove. Same principle as the judge out of reach in course 1.",
+          "explica": "A guard within the agent's reach is a guard it can remove. Same principle as the judge out of reach in course 1. The guard only reads the command: a python3 -c that writes still gets through, and that's why it comes with the deny Edit(...) from lesson 4 and the sandbox from lesson 6.",
           "ref": "passos"
         },
         {
@@ -271,7 +272,7 @@
         },
         {
           "t": "Guard the guard",
-          "texto": "Keep the judge, the goal, settings, and the hook itself out of edit reach."
+          "texto": "Judge, goal, settings and the hook protected in three layers: deny Edit from lesson 4, the guard (also against writing via Bash) and the sandbox from lesson 6."
         }
       ]
     },
@@ -291,7 +292,7 @@
         },
         {
           "t": "Course 3, Multi-agent: isolation and collision between sessions",
-          "href": "https://inematds.github.io/loop-r-eng-multiagente-v72/",
+          "href": "https://inematds.github.io/loop-r-eng-multiagente-v72/en/",
           "icone": "robo"
         },
         {

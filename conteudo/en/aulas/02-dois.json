@@ -145,7 +145,7 @@
           "titulo": "E5 · Your map under the Rule of Two",
           "min": "20 min",
           "texto": "Run your ~/meu-mapa.json with --regra dois. For each session that fails, choose: remove a letter, open a new clean-context session (\"nova_sessao\": true), or add a human (\"humano\": true). Write the choice down in the map.",
-          "pronto": "<code>python3 $K/triade.py ~/meu-mapa.json --regra dois; echo $?</code> → <code>REGRA DE DOIS: nenhuma sessão autônoma com as três</code> and <code>0</code>."
+          "pronto": "<code>K=~/projetos/loop-r-eng-seguranca-v72/kit; python3 $K/triade.py ~/meu-mapa.json --regra dois; echo $?</code> → <code>REGRA DE DOIS: nenhuma sessão autônoma com as três</code> and <code>0</code>."
         }
       ]
     },
@@ -222,7 +222,7 @@
         },
         {
           "t": "Course 3, Multi-agent: splitting the work across sessions",
-          "href": "https://inematds.github.io/loop-r-eng-multiagente-v72/",
+          "href": "https://inematds.github.io/loop-r-eng-multiagente-v72/en/",
           "icone": "robo"
         },
         {

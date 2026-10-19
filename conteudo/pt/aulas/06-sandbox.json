@@ -64,7 +64,7 @@
         }
       ],
       "volta": "ISOLAMENTO: OK só com escreve-fora e rede BLOQUEADOS",
-      "legenda": "A pesquisa (item 24) registra sandbox e allowlist falhando em 2026; a conclusão prática é provar a trava, não pedir mais confirmação."
+      "legenda": "Relato de fonte secundária: a <a href=\"https://helpnetsecurity.com/2026/06/11/owasp-prompt-injection-ai-security-failures\">Help Net Security</a> registra sandbox e allowlist falhando em 2026 no Cursor e no Codex CLI. A conclusão prática é provar a trava, não pedir mais confirmação."
     },
     {
       "tipo": "codigo",
@@ -267,6 +267,11 @@
         {
           "t": "LangChain: como escolher o sandbox do seu agente",
           "href": "https://langchain.com/blog/how-to-choose-the-right-sandbox-for-your-agent",
+          "icone": "lupa"
+        },
+        {
+          "t": "Help Net Security: falhas de allowlist e sandbox em 2026 (relato)",
+          "href": "https://helpnetsecurity.com/2026/06/11/owasp-prompt-injection-ai-security-failures",
           "icone": "lupa"
         },
         {

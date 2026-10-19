@@ -64,7 +64,7 @@
         }
       ],
       "volta": "ISOLAMENTO: OK only with escreve-fora and rede BLOQUEADOS",
-      "legenda": "The research (item 24) records sandbox and allowlist failing in 2026; the practical conclusion is to prove the lock, not to ask for more confirmation."
+      "legenda": "Secondary-source report: <a href=\"https://helpnetsecurity.com/2026/06/11/owasp-prompt-injection-ai-security-failures\">Help Net Security</a> records sandbox and allowlist failing in 2026 in Cursor and Codex CLI. The practical conclusion is to prove the lock, not to ask for more confirmation."
     },
     {
       "tipo": "codigo",
@@ -172,7 +172,7 @@
           "titulo": "E17 · The lock on your loop",
           "min": "10 min",
           "texto": "Run prova-isolamento.sh with the same wrapper your loop uses to call the agent (the same -s from Codex, the same systemd-run). Note the date and the result in the map (\"prova_isolamento\"), for lesson 8.",
-          "pronto": "<code>bash $P [wrapper do seu loop] --; echo $?</code> → <code>ISOLAMENTO: OK</code> and <code>0</code>."
+          "pronto": "<code>bash $P [your loop's wrapper] --; echo $?</code> → <code>ISOLAMENTO: OK</code> and <code>0</code>."
         }
       ]
     },
@@ -267,6 +267,11 @@
         {
           "t": "LangChain: how to choose your agent's sandbox",
           "href": "https://langchain.com/blog/how-to-choose-the-right-sandbox-for-your-agent",
+          "icone": "lupa"
+        },
+        {
+          "t": "Help Net Security: allowlist and sandbox failures in 2026 (report)",
+          "href": "https://helpnetsecurity.com/2026/06/11/owasp-prompt-injection-ai-security-failures",
           "icone": "lupa"
         },
         {

@@ -19,7 +19,7 @@
     },
     {
       "icone": "x",
-      "t": "guarda.py: push forzado, reset --hard, find -delete, archivos del juez"
+      "t": "guarda.py: push forzado, reset --hard, find -delete, archivos del juez, y lo que no atrapa"
     },
     {
       "icone": "lupa",
@@ -87,8 +87,9 @@
         {
           "titulo": "guarda.py (deny)",
           "texto": [
-            "Niega lo que no tiene vuelta atrás: push forzado, reset --hard, git clean -f, checkout -- ., find -delete, rm recursivo en la raíz o en el HOME, pkill y killall, dd y mkfs.",
-            "Y niega Edit/Write en goal.md, tests/, .claude/ y en la carpeta de la propia guardia (GUARDA_PROTEGIDOS cambia la lista)."
+            "Niega lo que no tiene vuelta atrás: push forzado, reset --hard, git clean -f, checkout -- ., git restore (del árbol), find -delete, rm recursivo en la raíz o en el HOME (con comillas o dentro de bash -c), pkill y killall, dd y mkfs.",
+            "Y niega escribir en goal.md, tests/, .claude/ y en la carpeta de la propia guardia, por Edit/Write y también por Bash: &gt; y &gt;&gt;, tee, sed -i, cp, mv, rm y truncate (GUARDA_PROTEGIDOS cambia la lista).",
+            "Lo que no atrapa: la guardia lee el texto del comando, no es sandbox. Un programa que escribe por sí solo (python3 -c \"open('goal.md','w')\", node -e, un script tuyo), una ruta armada en una variable o eval pasan. Por eso viene junto con el deny Edit(...) de la clase 4, que cubre las herramientas de archivo, y con el sandbox de la clase 6, que limita la escritura del propio Bash."
           ],
           "exemplo": {
             "rot": "Lección real de esta máquina",
@@ -139,7 +140,7 @@
         "abas": [
           {
             "rot": "Salida capturada (19/10/2026)",
-            "html": "<pre>## guarda.py (nega o irreversível)\ngit push --force origin main       → deny\ngit reset --hard HEAD~3            → deny\nfind . -name '*.o' -delete         → deny\nrm -rf ~                           → deny\npkill -f servidor                  → deny\npython3 -m pytest -q               → -\nEdit tests/test_x.py               → deny\nEdit src/app.py                    → -\n## raio.mjs (apagar pede confirmação, com a contagem)\nrm -r build                        → ask\nrm -r nada                         → -\n## colisao.mjs (outra sessão editou há pouco)\nsessão B edita o mesmo arquivo    → ask\nsessão A edita de novo            → -</pre><p>\"-\" significa sin decisión: el flujo normal (reglas y modo) decide. El rm de una carpeta que no existe no pide nada, porque no hay nada que borrar.</p>"
+            "html": "<pre>## guarda.py (nega o irreversível)\ngit push --force origin main       → deny\ngit reset --hard HEAD~3            → deny\nfind . -name '*.o' -delete         → deny\nrm -rf ~                           → deny\npkill -f servidor                  → deny\npython3 -m pytest -q               → -\nEdit tests/test_x.py               → deny\nEdit src/app.py                    → -\n## guarda.py: escrita via Bash nos protegidos\nsed -i s/x/y/ tests/test_x.py      → deny\necho pronto &gt; goal.md              → deny\necho {..} &gt; .claude/settings.local → deny\nmv goal.md /tmp/                   → deny\nbash -c 'rm -rf ~'                 → deny\ngit restore .                      → deny\npytest -q tests/ &gt; log.txt         → -\ngit restore --staged app.py        → -\n## o que a guarda NÃO pega (para isso: deny Edit/Write da aula 4 e sandbox da aula 6)\npython3 -c open('goal.md','w')     → -\n## raio.mjs (apagar pede confirmação, com a contagem)\nrm -r build                        → ask\nrm -r nada                         → -\n## colisao.mjs (outra sessão editou há pouco)\nsessão B edita o mesmo arquivo    → ask\nsessão A edita de novo            → -</pre><p>\"-\" es sin decisión: el flujo normal (reglas y modo) decide. pytest con salida en log.txt y git restore --staged pasan, porque no tocan los protegidos. La línea del python3 -c es el hueco declarado: la guardia no ve lo que escribe un programa. El rm de una carpeta que no existe no pide nada, porque no hay nada que borrar.</p>"
           },
           {
             "rot": "Error común: hook que solo avisa",
@@ -183,7 +184,7 @@
           "titulo": "E12 · Decisiones de los tres hooks",
           "min": "10 min",
           "texto": "Ejecuta el ensayo. Clona inema-agent-runtime en ~/projetos si falta.",
-          "pronto": "seis líneas <code>→ deny</code> en la guardia, <code>rm -r build → ask</code>, <code>sessão B edita o mesmo arquivo → ask</code> y <code>sessão A edita de novo → -</code>."
+          "pronto": "<code>bash ~/projetos/loop-r-eng-seguranca-v72/kit/hooks/provar-guarda.sh | grep -c '→ deny'</code> → <code>12</code>; y <code>rm -r build → ask</code>, <code>sessão B edita o mesmo arquivo → ask</code> y <code>sessão A edita de novo → -</code>."
         },
         {
           "id": "e13",
@@ -196,8 +197,8 @@
           "id": "e14",
           "titulo": "E14 · La guardia en tu proyecto",
           "min": "15 min",
-          "texto": "Copia el bloque hooks de settings-exemplo.json al .claude/settings.json de tu proyecto. Si tu juez tiene otros archivos, exporta GUARDA_PROTEGIDOS antes de abrir Claude Code.",
-          "pronto": "<code>printf '{\"cwd\":\"%s\",\"tool_name\":\"Edit\",\"tool_input\":{\"file_path\":\"goal.md\"}}' \"$PWD\" | python3 $K/hooks/guarda.py | grep -c deny</code> → <code>1</code>, ejecutado en la carpeta del proyecto."
+          "texto": "En el .claude/settings.json de tu proyecto, junta las permissions del executar.json de la clase 4 (deny Edit(goal.md), Edit(tests/**), Edit(.claude/**)) con el bloque hooks del settings-exemplo.json: las capas se suman. Si tu juez tiene otros archivos, exporta GUARDA_PROTEGIDOS antes de abrir Claude Code.",
+          "pronto": "<code>K=~/projetos/loop-r-eng-seguranca-v72/kit; printf '{\"cwd\":\"%s\",\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"echo x &gt; goal.md\"}}' \"$PWD\" | python3 $K/hooks/guarda.py | grep -c deny</code> → <code>1</code> y <code>grep -c 'Edit(goal.md)' .claude/settings.json</code> → <code>1</code>, ejecutados en la carpeta del proyecto."
         }
       ]
     },
@@ -240,7 +241,7 @@
             "Para ir más rápido"
           ],
           "certa": 1,
-          "explica": "Una guardia al alcance del agente es una guardia que él puede quitar. Mismo principio del juez fuera de su alcance en el curso 1.",
+          "explica": "Una guardia al alcance del agente es una guardia que él puede quitar. Es el mismo principio del juez fuera de alcance del curso 1. La guardia solo lee el comando: un python3 -c que escribe todavía pasa, y por eso viene con el deny Edit(...) de la clase 4 y el sandbox de la clase 6.",
           "ref": "passos"
         },
         {
@@ -271,7 +272,7 @@
         },
         {
           "t": "Protege la guardia",
-          "texto": "Juez, objetivo, settings y el propio hook fuera del alcance de edición."
+          "texto": "Juez, objetivo, settings y el hook protegidos en tres capas: deny Edit de la clase 4, la guardia (también contra escritura vía Bash) y el sandbox de la clase 6."
         }
       ]
     },
@@ -291,7 +292,7 @@
         },
         {
           "t": "Curso 3, Multiagente: aislamiento y colisión entre sesiones",
-          "href": "https://inematds.github.io/loop-r-eng-multiagente-v72/",
+          "href": "https://inematds.github.io/loop-r-eng-multiagente-v72/es/",
           "icone": "robo"
         },
         {

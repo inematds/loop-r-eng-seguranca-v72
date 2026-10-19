@@ -19,7 +19,7 @@
     },
     {
       "icone": "x",
-      "t": "guarda.py: push forçado, reset --hard, find -delete, arquivos do juiz"
+      "t": "guarda.py: push forçado, reset --hard, find -delete, arquivos do juiz, e o que ela não pega"
     },
     {
       "icone": "lupa",
@@ -87,8 +87,9 @@
         {
           "titulo": "guarda.py (deny)",
           "texto": [
-            "Nega o que não tem volta: push forçado, reset --hard, git clean -f, checkout -- ., find -delete, rm recursivo na raiz ou no HOME, pkill e killall, dd e mkfs.",
-            "E nega Edit/Write em goal.md, tests/, .claude/ e na pasta da própria guarda (GUARDA_PROTEGIDOS muda a lista)."
+            "Nega o que não tem volta: push forçado, reset --hard, git clean -f, checkout -- ., git restore (da árvore), find -delete, rm recursivo na raiz ou no HOME (com aspas ou dentro de bash -c), pkill e killall, dd e mkfs.",
+            "E nega escrever em goal.md, tests/, .claude/ e na pasta da própria guarda, por Edit/Write e também pelo Bash: &gt; e &gt;&gt;, tee, sed -i, cp, mv, rm e truncate (GUARDA_PROTEGIDOS muda a lista).",
+            "O que ela não pega: a guarda lê o texto do comando, não é sandbox. Um programa que grava sozinho (python3 -c \"open('goal.md','w')\", node -e, um script seu), caminho montado em variável ou eval passam. Por isso ela vem junto com o deny Edit(...) da aula 4, que cobre as ferramentas de arquivo, e com o sandbox da aula 6, que limita a escrita do próprio Bash."
           ],
           "exemplo": {
             "rot": "Lição real desta máquina",
@@ -139,7 +140,7 @@
         "abas": [
           {
             "rot": "Saída capturada (19/10/2026)",
-            "html": "<pre>## guarda.py (nega o irreversível)\ngit push --force origin main       → deny\ngit reset --hard HEAD~3            → deny\nfind . -name '*.o' -delete         → deny\nrm -rf ~                           → deny\npkill -f servidor                  → deny\npython3 -m pytest -q               → -\nEdit tests/test_x.py               → deny\nEdit src/app.py                    → -\n## raio.mjs (apagar pede confirmação, com a contagem)\nrm -r build                        → ask\nrm -r nada                         → -\n## colisao.mjs (outra sessão editou há pouco)\nsessão B edita o mesmo arquivo    → ask\nsessão A edita de novo            → -</pre><p>\"-\" é sem decisão: o fluxo normal (regras e modo) decide. O rm de uma pasta que não existe não pede nada, porque não há o que apagar.</p>"
+            "html": "<pre>## guarda.py (nega o irreversível)\ngit push --force origin main       → deny\ngit reset --hard HEAD~3            → deny\nfind . -name '*.o' -delete         → deny\nrm -rf ~                           → deny\npkill -f servidor                  → deny\npython3 -m pytest -q               → -\nEdit tests/test_x.py               → deny\nEdit src/app.py                    → -\n## guarda.py: escrita via Bash nos protegidos\nsed -i s/x/y/ tests/test_x.py      → deny\necho pronto &gt; goal.md              → deny\necho {..} &gt; .claude/settings.local → deny\nmv goal.md /tmp/                   → deny\nbash -c 'rm -rf ~'                 → deny\ngit restore .                      → deny\npytest -q tests/ &gt; log.txt         → -\ngit restore --staged app.py        → -\n## o que a guarda NÃO pega (para isso: deny Edit/Write da aula 4 e sandbox da aula 6)\npython3 -c open('goal.md','w')     → -\n## raio.mjs (apagar pede confirmação, com a contagem)\nrm -r build                        → ask\nrm -r nada                         → -\n## colisao.mjs (outra sessão editou há pouco)\nsessão B edita o mesmo arquivo    → ask\nsessão A edita de novo            → -</pre><p>\"-\" é sem decisão: o fluxo normal (regras e modo) decide. pytest com saída em log.txt e git restore --staged passam, porque não mexem nos protegidos. A linha do python3 -c é o furo declarado: a guarda não vê o que um programa grava. O rm de uma pasta que não existe não pede nada, porque não há o que apagar.</p>"
           },
           {
             "rot": "Erro comum: hook que só avisa",
@@ -183,7 +184,7 @@
           "titulo": "E12 · Decisões dos três hooks",
           "min": "10 min",
           "texto": "Rode o ensaio. Ele clona o inema-agent-runtime em ~/projetos se faltar.",
-          "pronto": "seis linhas <code>→ deny</code> na guarda, <code>rm -r build → ask</code>, <code>sessão B edita o mesmo arquivo → ask</code> e <code>sessão A edita de novo → -</code>."
+          "pronto": "<code>bash ~/projetos/loop-r-eng-seguranca-v72/kit/hooks/provar-guarda.sh | grep -c '→ deny'</code> → <code>12</code>; e <code>rm -r build → ask</code>, <code>sessão B edita o mesmo arquivo → ask</code> e <code>sessão A edita de novo → -</code>."
         },
         {
           "id": "e13",
@@ -196,8 +197,8 @@
           "id": "e14",
           "titulo": "E14 · A guarda no seu projeto",
           "min": "15 min",
-          "texto": "Copie o bloco hooks do settings-exemplo.json para o .claude/settings.json do seu projeto. Se o seu juiz tem outros arquivos, exporte GUARDA_PROTEGIDOS antes de abrir o Claude Code.",
-          "pronto": "<code>printf '{\"cwd\":\"%s\",\"tool_name\":\"Edit\",\"tool_input\":{\"file_path\":\"goal.md\"}}' \"$PWD\" | python3 $K/hooks/guarda.py | grep -c deny</code> → <code>1</code>, rodado na pasta do projeto."
+          "texto": "No .claude/settings.json do seu projeto, junte as permissions do executar.json da aula 4 (deny Edit(goal.md), Edit(tests/**), Edit(.claude/**)) com o bloco hooks do settings-exemplo.json: as camadas se somam. Se o seu juiz tem outros arquivos, exporte GUARDA_PROTEGIDOS antes de abrir o Claude Code.",
+          "pronto": "<code>K=~/projetos/loop-r-eng-seguranca-v72/kit; printf '{\"cwd\":\"%s\",\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"echo x &gt; goal.md\"}}' \"$PWD\" | python3 $K/hooks/guarda.py | grep -c deny</code> → <code>1</code> e <code>grep -c 'Edit(goal.md)' .claude/settings.json</code> → <code>1</code>, rodados na pasta do projeto."
         }
       ]
     },
@@ -240,7 +241,7 @@
             "Para ficar mais rápido"
           ],
           "certa": 1,
-          "explica": "Guarda ao alcance do agente é guarda que ele pode remover. Mesmo princípio do juiz fora do alcance no curso 1.",
+          "explica": "Guarda ao alcance do agente é guarda que ele pode remover. Mesmo princípio do juiz fora do alcance no curso 1. A guarda só lê o comando: um python3 -c que grava ainda passa, e por isso ela vem com o deny Edit(...) da aula 4 e o sandbox da aula 6.",
           "ref": "passos"
         },
         {
@@ -271,7 +272,7 @@
         },
         {
           "t": "Guarde a guarda",
-          "texto": "Juiz, objetivo, settings e o próprio hook fora do alcance de edição."
+          "texto": "Juiz, objetivo, settings e o hook protegidos em três camadas: deny Edit da aula 4, a guarda (também contra escrita via Bash) e o sandbox da aula 6."
         }
       ]
     },

@@ -154,7 +154,7 @@
         {
           "titulo": "Volver no es deshacer",
           "texto": [
-            "git checkout [arquivo] vuelve al último commit, no al estado de antes de la prueba: el 05/10/2026 borró reglas sin commitear. Prueba destructiva: commit antes o copia afuera.",
+            "git checkout [archivo] vuelve al último commit, no al estado de antes de la prueba: el 05/10/2026 borró reglas sin commitear. Prueba destructiva: commit antes o copia afuera.",
             "Por eso la guardia de la lección 5 niega checkout -- . y reset --hard."
           ]
         }
@@ -171,7 +171,7 @@
           "conteudo": "P=~/projetos/loop-r-eng-seguranca-v72/kit/prova-isolamento.sh\nW=/tmp/ensaio-seg/iso; mkdir -p $W\necho \"## teto de tempo: RuntimeMaxSec=3 num sleep 10\"\nsystemd-run --user --wait --pipe --quiet -p RuntimeMaxSec=3 sleep 10; echo \"saída: $?\"\necho \"## fora do terminal, com teto E sandbox do Codex dentro\"\nbash $P systemd-run --user --pipe --wait --quiet -p MemoryMax=1G -p RuntimeMaxSec=60 -- \\\n  codex sandbox -P :workspace -C $W --\necho \"saída: $?\""
         },
         {
-          "rot": "Archivo · kit/systemd/loop-seguro.service (modelo)",
+          "rot": "Archivo · kit/systemd/loop-seguro.service (modelo; comentarios traducidos para lectura)",
           "icone": "arquivo",
           "conteudo": "# loop-seguro.service — modelo de unit de usuario para correr un ciclo del agente fuera de la terminal\n# sin aumentar el radio de daño. Cambia MEU-PROJETO y verifica con prova-isolamento.sh ANTES de activarlo.\n#   cp loop-seguro.service ~/.config/systemd/user/ && systemctl --user daemon-reload\n#   systemctl --user start loop-seguro.service && journalctl --user -u loop-seguro -n 20\n#\n# Lo que sujeta de verdad (probado el 19/10/2026, systemd 255, Ubuntu, kernel con\n# apparmor_restrict_unprivileged_userns=1):\n#   - topes: MemoryMax, TimeoutStartSec (oneshot no acepta RuntimeMaxSec), timeout y flock (funcionan en el systemd --user)\n#   - aislamiento: el sandbox de Codex (-s workspace-write) DENTRO del servicio\n# Lo que NO sujetó en esta máquina: PrivateNetwork=, ProtectHome=, IPAddressDeny= en el systemd --user.\n# El journal dice \"proceeding without\" y el servicio corre sin el bloqueo. No cuentes con ellas sin prueba.\n[Unit]\nDescription=Um ciclo do loop do agente (curso Segurança do Loop Autônomo)\n\n[Service]\nType=oneshot\nWorkingDirectory=%h/projetos/MEU-PROJETO\n# PATH fixo: o serviço não herda o seu shell (nem as suas chaves). Não ponha EnvironmentFile com segredo.\nEnvironment=PATH=%h/.npm-global/bin:/usr/local/bin:/usr/bin:/bin\nStandardInput=file:%h/projetos/MEU-PROJETO/longrun/prompt.md\nExecStart=/usr/bin/flock -n %t/loop-seguro.lock timeout 2h codex exec -s workspace-write --skip-git-repo-check -C %h/projetos/MEU-PROJETO -\nMemoryMax=4G\nTimeoutStartSec=3h\nNoNewPrivileges=yes"
         }
@@ -319,7 +319,7 @@
       "links": [
         {
           "t": "Curso 2, clase 6: el loop headless (loop-longrun.sh, flock, MemoryMax)",
-          "href": "https://inematds.github.io/loop-r-eng-execucao-longa-v72/aulas/headless/",
+          "href": "https://inematds.github.io/loop-r-eng-execucao-longa-v72/es/aulas/headless/",
           "icone": "robo"
         },
         {

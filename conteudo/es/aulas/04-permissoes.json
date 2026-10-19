@@ -204,7 +204,7 @@
           "id": "e11",
           "titulo": "E11 · El sandbox por defecto de tu Codex",
           "min": "5 min",
-          "texto": "Mira si tu config.toml desactiva el sandbox para todas las llamadas. En esta máquina estaba en danger-full-access, puesto cuando bubblewrap fallaba; desde entonces, todo codex exec del loop necesita -s explícito.",
+          "texto": "Revisa si tu config.toml desactiva el sandbox para todas las llamadas. Es común que quede en danger-full-access después de un rodeo (por ejemplo, cuando bubblewrap falló) y que nunca vuelva atrás; en ese caso, todo codex exec del loop necesita -s explícito.",
           "pronto": "<code>grep -n sandbox_mode ~/.codex/config.toml</code> no imprime nada o imprime <code>read-only</code>/<code>workspace-write</code>; si imprime <code>danger-full-access</code>, todo <code>codex exec</code> de tu loop lleva <code>-s</code>."
         }
       ]
