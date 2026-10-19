@@ -22,7 +22,7 @@ r escreve-fora "echo x > '"$fora"'"
 r rede "curl -s -m 5 -o /dev/null https://example.com"
 r le-segredo "cat '"$HOME"'/.config/prova-iso/segredo"'
 saida=$("$@" bash -c "$sonda" 2>/dev/null)
-rm -f "$fora" "$W/dentro.txt"
+rm -f "$fora" "$W/dentro.txt" "$HOME/.config/prova-iso/segredo"; rmdir "$HOME/.config/prova-iso" 2>/dev/null
 echo "$saida" | sed 's/^/  /'
 fugiu=$(echo "$saida" | grep -cE '^(escreve-fora|rede) ABERTO')
 echo "$saida" | grep -q '^le-segredo ABERTO' && echo "  aviso: lê arquivos fora da pasta; tire segredos do alcance ou corte a rede"

@@ -21,7 +21,8 @@
     "raio de dano": "blast radius",
     "teto": "cap",
     "Formação LOOP-R Engenharia": "LOOP-R Engineering Track",
-    "Segurança do Loop Autônomo (nome do curso)": "Autonomous Loop Security"
+    "Segurança do Loop Autônomo (nome do curso)": "Autonomous Loop Security",
+    "raio.mjs / \"o raio\" e colisao.mjs são nomes de arquivo (hooks), não \"raio de dano\"": "keep raio.mjs and colisao.mjs as file names; never translate as blast radius"
   },
   "es": {
     "REGRA: tudo dentro de <pre> e de <code> é saída ou comando real do kit (em português) e fica IGUAL, sem traduzir": "REGLA: todo lo que está dentro de <pre> y de <code> es salida o comando real del kit (en portugués) y queda EXACTAMENTE igual, sin traducir (p. ej. TRÍADE: violada em triagem, REGRA DE DOIS, VAZOU, canário ausente, ISOLAMENTO: OK, ISOLAMENTO: FURADO, BLOQUEADO, ABERTO, RECUSADO, APROVADO, EXECUTADO, AUDITORIA, REPROVADA, APROVADA, sem regra, saída: 0, continua lá, mudança não commitada preservada)",
@@ -45,6 +46,7 @@
     "raio de dano": "radio de daño",
     "teto": "tope",
     "Formação LOOP-R Engenharia": "Formación LOOP-R Ingeniería",
-    "Segurança do Loop Autônomo (nome do curso)": "Seguridad del Loop Autónomo"
+    "Segurança do Loop Autônomo (nome do curso)": "Seguridad del Loop Autónomo",
+    "raio.mjs / \"o raio\" e colisao.mjs são nomes de arquivo (hooks), não \"raio de dano\"": "mantener raio.mjs y colisao.mjs como nombres de archivo; nunca traducir como radio de daño"
   }
 }

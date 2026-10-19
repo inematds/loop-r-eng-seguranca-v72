@@ -30,7 +30,7 @@
     "numeros": [
       { "v": "8", "t": "aulas" },
       { "v": "23", "t": "exercícios com saída esperada" },
-      { "v": "10", "t": "ensaios locais, sem chamar modelo" },
+      { "v": "11", "t": "ensaios locais, sem chamar modelo" },
       { "v": "3", "t": "passos reais, uma chamada cada" }
     ],
     "aulas_titulo": "As aulas",

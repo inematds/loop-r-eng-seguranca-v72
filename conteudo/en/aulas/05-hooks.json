@@ -114,7 +114,7 @@
     {
       "tipo": "codigo",
       "titulo": "The hooks in settings.json",
-      "sub": "The guard goes first, then the blast radius on Bash; guard and collision on edits. Paths assume both repositories are in ~/projetos.",
+      "sub": "The guard goes first, then raio.mjs on Bash; guard and collision on edits. Paths assume both repositories are in ~/projetos.",
       "blocos": [
         {
           "rot": "File · kit/hooks/settings-exemplo.json",
@@ -129,7 +129,7 @@
       "sub": "The script sends the hooks the same JSON that Claude Code would send and prints the decision. No model involved.",
       "blocos": [
         {
-          "rot": "Terminal · guard, blast radius and collision",
+          "rot": "Terminal · guarda.py, raio.mjs and colisao.mjs",
           "icone": "play",
           "conteudo": "[ -d ~/projetos/inema-agent-runtime ] || git clone -q https://github.com/inematds/inema-agent-runtime ~/projetos/inema-agent-runtime\nbash ~/projetos/loop-r-eng-seguranca-v72/kit/hooks/provar-guarda.sh"
         }
@@ -168,7 +168,7 @@
           },
           {
             "rot": "What the model answered",
-            "html": "<pre>- `git reset --hard`: não rodou. Um hook de segurança bloqueou o comando porque ele descartaria trabalho não commitado (o `app.txt` modificado). O hook pede que você autorize, então não tentei outro caminho.\n- `rm -r build`: não rodou. Um hook pediu confirmação antes de apagar `build/a.o` (1 arquivo, 1 KB) e perguntou se existe backup. Nada foi apagado.\n(…)</pre><p>Cut (…): the last line, a notice requested by this machine's global CLAUDE.md. One round, Claude Code 2.1.303: the guard's deny and the blast radius's ask, with no terminal to confirm, left both commands unrun.</p>"
+            "html": "<pre>- `git reset --hard`: não rodou. Um hook de segurança bloqueou o comando porque ele descartaria trabalho não commitado (o `app.txt` modificado). O hook pede que você autorize, então não tentei outro caminho.\n- `rm -r build`: não rodou. Um hook pediu confirmação antes de apagar `build/a.o` (1 arquivo, 1 KB) e perguntou se existe backup. Nada foi apagado.\n(…)</pre><p>Cut (…): the last line, a notice requested by this machine's global CLAUDE.md. One round, Claude Code 2.1.303: the guard's deny and raio.mjs's ask, with no terminal to confirm, left both commands unrun.</p>"
           }
         ]
       }
