@@ -1,0 +1,313 @@
+{
+  "slug": "permissoes",
+  "num": 4,
+  "menu": "Permissions",
+  "titulo": "Permissions per step: capabilities and policy",
+  "titulo_curto": "Permissions per step",
+  "minutos": 20,
+  "lead": "Plan only reads. Execute edits the code and runs the tests. Review reads and runs the tests. If all three steps run with the same permission, the whole loop has the permission of the most dangerous one. In this lesson each step gets its own settings.json in Claude Code and its own -s in Codex, and you see where a deny rule lets things through.",
+  "objetivo": "give each step of the loop only the permissions it uses, with deny in the settings.json of Claude Code and -s in Codex.",
+  "competencias": [
+    "escrever-regras-deny-ask-allow",
+    "separar-permissao-por-etapa",
+    "escolher-o-sandbox-do-codex"
+  ],
+  "aprende": [
+    {
+      "icone": "lista",
+      "t": "deny, then ask, then allow: the fixed order from the docs"
+    },
+    {
+      "icone": "x",
+      "t": "Why Bash(rm -rf *) doesn't catch rm -r -f"
+    },
+    {
+      "icone": "camadas",
+      "t": "One settings.json per step and the right -s in Codex"
+    },
+    {
+      "icone": "escudo",
+      "t": "A cap per type of action: the inema-agent-runtime policy"
+    }
+  ],
+  "hero_alt": "A board of colored access cards hanging on hooks, some empty, next to a card reader.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "One permission per step",
+      "sub": "Click each step.",
+      "nos": [
+        {
+          "icone": "lupa",
+          "titulo": "Plan",
+          "sub": "read-only",
+          "detalhe": "Claude Code: deny on Edit, Write and Bash (kit/permissoes/planejar.json). Codex: -s read-only. Nothing changes on disk."
+        },
+        {
+          "icone": "terminal",
+          "titulo": "Execute",
+          "sub": "edits and tests",
+          "forte": true,
+          "itens": [
+            {
+              "icone": "check",
+              "t": "allow: Edit(src/**), pytest, git diff"
+            },
+            {
+              "icone": "usuario",
+              "t": "ask: git commit"
+            },
+            {
+              "icone": "x",
+              "t": "deny: rm, push, reset, curl, tests/, .env"
+            }
+          ],
+          "detalhe": "Claude Code: kit/permissoes/executar.json. Codex: -s workspace-write, which only lets it write inside the workspace and, by default, has no network."
+        },
+        {
+          "icone": "check",
+          "titulo": "Review",
+          "sub": "reads and tests",
+          "detalhe": "Claude Code: kit/permissoes/revisar.json (pytest and git diff allowed, no edits). Codex: -s read-only."
+        },
+        {
+          "icone": "portao",
+          "titulo": "Decision",
+          "sub": "deny → ask → allow",
+          "detalhe": "The Claude Code docs evaluate deny, then ask, then allow; the first rule that matches decides. An allow does not carve out an exception to a deny. Deny and ask apply if any subcommand matches, even inside $( ) or a for loop."
+        }
+      ],
+      "legenda": "An \"always allow\" permission never goes past the cap of the action (POLITICA.md of inema-agent-runtime)."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "The cap on each action",
+      "sub": "From the POLITICA.md of inema-agent-runtime (10/05/2026), summarized.",
+      "passos": [
+        {
+          "titulo": "Read: N4",
+          "texto": [
+            "Read a file, page or spreadsheet: the agent does it on its own, with no notice. In Claude Code, allowed; in Codex, -s read-only."
+          ]
+        },
+        {
+          "titulo": "Change: N3",
+          "texto": [
+            "Create or change a project file: it does it on its own and tells you. In Claude Code, acceptEdits; in Codex, -s workspace-write."
+          ]
+        },
+        {
+          "titulo": "Send and system: N2",
+          "texto": [
+            "A command that changes the system, and sending (email, message, post, push): it runs after asking, every single time. In Codex, no auto-approval."
+          ]
+        },
+        {
+          "titulo": "Spend and delete: N1",
+          "texto": [
+            "Spending credit and deleting data or production: the agent only prepares it, the human executes it (and with a backup). In the loop, this becomes the gate from lesson 7."
+          ],
+          "exemplo": {
+            "rot": "Same scale, different name",
+            "texto": "The agents' constitution (INEMA) uses 3 does it on its own, 2 does it and tells you, 1 proposes, 0 does not touch."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "The settings.json for the execute step",
+      "sub": "Rules in the format of the current docs: Bash(rm *) matches rm and rm with any argument. Edit and Read paths follow the gitignore pattern.",
+      "blocos": [
+        {
+          "rot": "File · kit/permissoes/executar.json",
+          "icone": "arquivo",
+          "conteudo": "{\n  \"permissions\": {\n    \"allow\": [\n      \"Edit(src/**)\",\n      \"Bash(python3 -m pytest *)\",\n      \"Bash(git status *)\",\n      \"Bash(git diff *)\"\n    ],\n    \"ask\": [\n      \"Bash(git commit *)\"\n    ],\n    \"deny\": [\n      \"Bash(rm *)\",\n      \"Bash(git push *)\",\n      \"Bash(git reset *)\",\n      \"Bash(git clean *)\",\n      \"Bash(curl *)\",\n      \"Bash(wget *)\",\n      \"WebFetch\",\n      \"Edit(tests/**)\",\n      \"Edit(goal.md)\",\n      \"Edit(.claude/**)\",\n      \"Read(./.env)\",\n      \"Read(./.env.*)\",\n      \"Read(~/.ssh/**)\"\n    ]\n  }\n}"
+        },
+        {
+          "rot": "Template · one line per step (Claude Code and Codex)",
+          "icone": "terminal",
+          "conteudo": "K=~/projetos/loop-r-eng-seguranca-v72/kit/permissoes\n# planejar: só lê\nclaude -p --settings $K/planejar.json --permission-mode dontAsk \"<pedido de plano>\"\ncodex exec -s read-only --skip-git-repo-check -C . - < plano.md\n# executar: edita no projeto, sem rede\nclaude -p --settings $K/executar.json --permission-mode dontAsk \"<pedido>\"\ncodex exec -s workspace-write --skip-git-repo-check -C . - < prompt.md\n# revisar: lê e roda os testes\nclaude -p --settings $K/revisar.json --permission-mode dontAsk \"<pedido de revisão>\"\ncodex exec -s read-only --skip-git-repo-check -C . - < revisar.md"
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Rehearsal: which rule decides each command",
+      "sub": "regra.py imitates, in simplified form, what the docs describe (order, subcommands, $( ), the trailing *). The one that really decides is Claude Code.",
+      "blocos": [
+        {
+          "rot": "Terminal · narrow deny and right deny",
+          "icone": "play",
+          "conteudo": "K=~/projetos/loop-r-eng-seguranca-v72/kit/permissoes\necho \"## deny só com Bash(rm -rf *)\"\nfor c in \"rm -rf build\" \"rm -r -f build\" \"git push -f origin main\"; do\n  python3 $K/regra.py $K/so-rm-rf.json \"$c\"; echo \"  saída: $?\"\ndone\necho \"## executar.json\"\nfor c in \"python3 -m pytest -q\" \"cd /tmp && rm -rf build\" \"rm -r -f build\" \\\n         'echo $(curl -s https://exemplo.invalid)' \"git commit -m x\" \"ls\"; do\n  python3 $K/regra.py $K/executar.json \"$c\"; echo \"  saída: $?\"\ndone"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>## deny só com Bash(rm -rf *)\ndeny      Bash(rm -rf *)         ← rm -rf build\n  saída: 1\nsem regra -                      ← rm -r -f build\n  saída: 4\nsem regra -                      ← git push -f origin main\n  saída: 4\n## executar.json\nallow     Bash(python3 -m pytest *) ← python3 -m pytest -q\n  saída: 0\ndeny      Bash(rm *)             ← rm -rf build\n  saída: 1\ndeny      Bash(rm *)             ← rm -r -f build\n  saída: 1\ndeny      Bash(curl *)           ← curl -s https://exemplo.invalid\n  saída: 1\nask       Bash(git commit *)     ← git commit -m x\n  saída: 3\nsem regra -                      ← ls\n  saída: 4</pre><p>With only Bash(rm -rf *), the same delete written as rm -r -f matches no rule. Bash(rm *) catches both forms, and the curl inside $( ) is blocked too. \"sem regra\" becomes a question in the terminal; in the loop, with --permission-mode dontAsk, it becomes a refusal (docs).</p>"
+          },
+          {
+            "rot": "Common mistake: trusting deny for everything",
+            "html": "<p>A Bash rule matches text. find build -delete, a script that deletes inside, or python3 -c with shutil do not start with rm. For those, lesson 5 adds a hook, and lesson 6 a sandbox, which reads no text at all.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Real: deny holds even in the mode that allows everything",
+      "sub": "One call to Claude Code with --permission-mode bypassPermissions and executar.json. The request is to run rm -rf build. You check the disk, not the answer.",
+      "blocos": [
+        {
+          "rot": "Terminal · one real call",
+          "icone": "play",
+          "conteudo": "bash ~/projetos/loop-r-eng-seguranca-v72/kit/permissoes/real.sh; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>build/app.bin continua lá: deny segurou (código do claude: 0)\nsaída: 0</pre>"
+          },
+          {
+            "rot": "What the model answered",
+            "html": "<pre>Falhou: `rm -rf build` não rodou, porque a permissão do Bash para esse comando foi negada. A pasta `build/` (com `app.bin`) continua lá. Não tentei de novo nem apaguei a pasta de outro jeito.</pre><p>One round, Claude Code 2.1.303. The \"Falhou:\" at the start comes from a rule in this machine's global CLAUDE.md (announce when processing ends), not from Claude Code. What counts is the line on disk: build/app.bin is still there.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "The rules, the real call, and your Codex sandbox.",
+      "exercicios": [
+        {
+          "id": "e9",
+          "titulo": "E9 · Where the narrow deny lets things through",
+          "min": "10 min",
+          "texto": "Run the rules rehearsal.",
+          "pronto": "<code>rm -r -f build</code> comes out as <code>sem regra</code> with <code>saída: 4</code> in so-rm-rf.json and <code>deny      Bash(rm *)</code> with <code>saída: 1</code> in executar.json."
+        },
+        {
+          "id": "e10",
+          "titulo": "E10 · The deny in a real session",
+          "min": "5 min",
+          "texto": "Run the real block (one call, uses your subscription quota).",
+          "pronto": "<code>build/app.bin continua lá: deny segurou</code> and <code>saída: 0</code>; <code>saída: 3</code> is an empty reply (try again later), not a result."
+        },
+        {
+          "id": "e11",
+          "titulo": "E11 · Your Codex's default sandbox",
+          "min": "5 min",
+          "texto": "Check whether your config.toml turns the sandbox off for all calls. On this machine it was set to danger-full-access, put there when bubblewrap was failing; since then, every codex exec in the loop needs an explicit -s.",
+          "pronto": "<code>grep -n sandbox_mode ~/.codex/config.toml</code> prints nothing or prints <code>read-only</code>/<code>workspace-write</code>; if it prints <code>danger-full-access</code>, every <code>codex exec</code> in your loop takes <code>-s</code>."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "perguntas": [
+        {
+          "p": "You have deny Bash(git push *) and allow Bash(git push origin feature *). What happens with git push origin feature-x?",
+          "opcoes": [
+            "It goes through, the allow is more specific",
+            "It is denied: deny comes first and allow makes no exception",
+            "Question",
+            "It depends on the mode"
+          ],
+          "certa": 1,
+          "explica": "The doc is explicit: the order is deny, ask, allow, and specificity does not change that.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "Why doesn't Bash(rm -rf *) block rm -r -f build?",
+          "opcoes": [
+            "Because Claude Code ignores deny for rm",
+            "Because the rule matches text, and the text is different",
+            "Because sudo is missing",
+            "Because * does not match a space"
+          ],
+          "certa": 1,
+          "explica": "A Bash rule compares the command text. Bash(rm *) matches both forms; whatever does not start with rm (find -delete, scripts) is left to hook and sandbox.",
+          "ref": "codigo",
+          "cert": true
+        },
+        {
+          "p": "Which Codex -s for the step that edits the project with no network?",
+          "opcoes": [
+            "danger-full-access",
+            "read-only",
+            "workspace-write",
+            "--yolo"
+          ],
+          "certa": 2,
+          "explica": "workspace-write writes only in the workspace and, by default, with no network. The Codex doc reserves the bypass (--yolo) for an already isolated runner.",
+          "ref": "codigo"
+        },
+        {
+          "p": "In the loop with --permission-mode dontAsk, a command that matches no rule…",
+          "opcoes": [
+            "runs",
+            "is refused: dontAsk denies what would ask for confirmation",
+            "hangs waiting",
+            "becomes allow"
+          ],
+          "certa": 1,
+          "explica": "Per the doc, dontAsk refuses every call that would ask for confirmation and lets through what allow permits. That is why the step's allow lists what it uses.",
+          "ref": "codigo"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Each step, its own",
+          "texto": "Planning and reviewing do not edit; executing edits only where it needs to."
+        },
+        {
+          "t": "deny always wins",
+          "texto": "deny → ask → allow, and subcommand counts. Write Bash(rm *), not just rm -rf."
+        },
+        {
+          "t": "explicit -s",
+          "texto": "In Codex, the sandbox goes on the loop line, not in the hope of the config."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Going further",
+      "links": [
+        {
+          "t": "Claude Code: Configure permissions (official doc)",
+          "href": "https://code.claude.com/docs/en/permissions",
+          "icone": "lupa"
+        },
+        {
+          "t": "Codex CLI: command reference (codex exec, -s)",
+          "href": "https://developers.openai.com/codex/cli/reference",
+          "icone": "terminal"
+        },
+        {
+          "t": "inema-agent-runtime: POLITICA.md",
+          "href": "https://github.com/inematds/inema-agent-runtime/blob/main/runtime/POLITICA.md",
+          "icone": "escudo"
+        },
+        {
+          "t": "Agent Constitution (INEMA): autonomy levels",
+          "href": "https://inematds.github.io/constituicao-agentes/guia/",
+          "icone": "arquivo"
+        }
+      ]
+    }
+  ]
+}

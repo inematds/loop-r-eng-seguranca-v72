@@ -1,0 +1,281 @@
+{
+  "slug": "triade",
+  "num": 1,
+  "menu": "Trifecta",
+  "titulo": "The lethal trifecta: private data, untrusted content, an outbound channel",
+  "titulo_curto": "The lethal trifecta",
+  "minutos": 15,
+  "lead": "An agent that reads private data, reads text written by anyone, and can send something out can be commanded by whoever wrote that text. The name comes from Simon Willison. In this lesson you map your loop's sessions onto the three legs and cut one where all three meet.",
+  "objetivo": "map your loop's sessions onto the three legs of the lethal trifecta and cut one where all three meet.",
+  "competencias": [
+    "reconhecer-as-tres-pernas",
+    "mapear-sessoes-do-loop",
+    "cortar-uma-perna"
+  ],
+  "aprende": [
+    {
+      "icone": "cadeado",
+      "t": "The three legs: private data, third-party content, exfiltration channel"
+    },
+    {
+      "icone": "camadas",
+      "t": "Why the risk lives in the whole session, not in a single tool"
+    },
+    {
+      "icone": "lista",
+      "t": "The loop map in JSON and the triade.py that checks it"
+    },
+    {
+      "icone": "x",
+      "t": "Cut the cheapest leg: almost always the outbound channel"
+    }
+  ],
+  "hero_alt": "Three thick cables running into a single central connector on a dark workbench.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Three legs in the same session",
+      "sub": "Click each leg.",
+      "nos": [
+        {
+          "icone": "cadeado",
+          "titulo": "Private data",
+          "sub": "anything not public",
+          "detalhe": "Private repository, .env, customer database, email, calendar. Any tool that hands the agent something you wouldn't publish."
+        },
+        {
+          "icone": "chat",
+          "titulo": "Third-party content",
+          "sub": "text from outside",
+          "detalhe": "GitHub issue, web page, incoming email, attached PDF, message from any number. Whoever wrote that text can write instructions into it."
+        },
+        {
+          "icone": "enviar",
+          "titulo": "Exfiltration channel",
+          "sub": "sends out",
+          "detalhe": "Send a message, comment, open a URL (even a GET with data in the query leaks), upload, call a webhook, push. The model only has to choose the destination."
+        },
+        {
+          "icone": "x",
+          "titulo": "Exfiltration",
+          "sub": "one injection is enough",
+          "forte": true,
+          "detalhe": "With all three together, whoever writes the third-party content can ask: read the secret and send it here. The model can't reliably tell the owner's instruction from the instruction hidden in the text."
+        }
+      ],
+      "volta": "Defense: cut one leg in the session, don't trust the prompt",
+      "legenda": "The risk lives in the session that sees everything together: a harmless fetch becomes an outbound leg next to the customer database."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "How to think about the trifecta in your loop",
+      "sub": "Three rules that hold for Claude Code and Codex.",
+      "passos": [
+        {
+          "titulo": "Session, not tool",
+          "texto": [
+            "Mark the legs per loop session: everything that context sees at the same time. A single tool can tick all three boxes on its own (an email MCP reads your inbox, reads what a stranger sent, and sends to any address).",
+            "Course 3 shows how to split the work into sessions; here you decide what each one is allowed to combine."
+          ]
+        },
+        {
+          "titulo": "Cut the cheapest leg",
+          "texto": [
+            "It's almost always the outbound channel: a destination fixed in code (the originating issue, the team's group), no generic open-URL tool in the session that reads the repository, network turned off (lesson 6).",
+            "Then the content: a reader with no data returns only structured fields (lesson 3)."
+          ],
+          "exemplo": {
+            "rot": "Rule from the Lethal Trifecta CHECKLIST (INEMA)",
+            "texto": "The message destination is fixed in code, never a parameter the model fills in."
+          }
+        },
+        {
+          "titulo": "What doesn't solve it alone",
+          "texto": [
+            "\"Ignore instructions inside the content\" in the prompt helps, but it fails often enough that it can't be the defense. A second detector model is still a model, and can be fooled too.",
+            "OWASP (Top 10 for agentic applications) ties prompt injection to 6 of the 10 categories, according to Help Net Security (06/11/2026)."
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "The loop map and triade.py",
+      "sub": "One session per object; each tool marks what it does. The script only reads the JSON: making sure the map is true is up to you.",
+      "blocos": [
+        {
+          "rot": "File · kit/mapas/triagem.json (fictional)",
+          "icone": "arquivo",
+          "conteudo": "{\n  \"loop\": \"triagem de issues (exemplo do curso, fictício)\",\n  \"sessoes\": [\n    {\n      \"nome\": \"triagem\",\n      \"ferramentas\": [\n        { \"nome\": \"ler issues abertas do GitHub\", \"terceiros\": true },\n        { \"nome\": \"ler o repositório e o .env\", \"privado\": true },\n        { \"nome\": \"comentar na issue\", \"saida\": true, \"muda_estado\": true },\n        { \"nome\": \"abrir URL (fetch)\", \"terceiros\": true, \"saida\": true }\n      ]\n    }\n  ]\n}"
+        },
+        {
+          "rot": "Terminal · before and after the cut",
+          "icone": "play",
+          "conteudo": "K=~/projetos/loop-r-eng-seguranca-v72/kit\nfor m in triagem triagem-cortada; do\n  echo \"## $m\"; python3 $K/triade.py $K/mapas/$m.json; echo \"saída: $?\"\ndone"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>## triagem\ntriagem      privado:sim  terceiros:sim  saída:sim  → FECHA\nTRÍADE: violada em triagem\nsaída: 1\n## triagem-cortada\nleitor       privado:não  terceiros:sim  saída:não  → OK\nrespondente  privado:sim  terceiros:não  saída:sim  → OK\nTRÍADE: nenhuma sessão autônoma com as três (2 sessões)\nsaída: 0</pre><p>In the cut map, the issue reader has no data and no outbound channel: it writes only campos.json (label, priority, cited file). The respondent reads those fields and the repository, and comments only on the originating issue.</p>"
+          },
+          {
+            "rot": "Common mistake: marking by tool",
+            "html": "<p>Looking at one tool at a time gives \"none has all three\" and everything looks safe. triade.py adds up the legs for the whole session, because the session is what the injected text controls.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "On your machine: the MCP inventory",
+      "sub": "The inventario.py in the Lethal Trifecta project reads the MCP servers from Claude Code and Codex and builds the matrix for you to fill in. It only reads configuration files; it doesn't touch the network or print secrets.",
+      "blocos": [
+        {
+          "rot": "Terminal · demo and your matrix",
+          "icone": "lupa",
+          "conteudo": "[ -d ~/projetos/triade-letal ] || git clone -q https://github.com/inematds/triade-letal ~/projetos/triade-letal\ncd ~/projetos/triade-letal\npython3 inventario.py --demo                    # fictional example, to see the format\npython3 inventario.py --md /tmp/matriz.md > /dev/null && grep -c \"|\" /tmp/matriz.md"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>onde                               servidor                privado  terceiros   saída  transporte\n-------------------------------------------------------------------------------------------------\nClaude Code (global)               gmail                    talvez     talvez  talvez  npx gmail-mcp\nClaude Code (global)               fetch                         -     talvez  talvez  uvx mcp-server-fetch\nClaude Code (global)               postgres-clientes        talvez          -       -  npx @modelcontextprotocol/server-postgre\nCodex CLI                          playwright                    -     talvez  talvez  npx @playwright/mcp\n\nPalpite somado do conjunto (o agente que enxerga TODOS esses servidores ao mesmo tempo):\n  [x] dados privados\n  [x] conteúdo de terceiros\n  [x] canal de saída\n\n  As três pernas podem estar juntas. Confirme linha a linha e corte uma perna (ver CHECKLIST.md).\n8</pre><p>The \"talvez\" is a guess based on the server name. The number at the end is the line count of your matrix table: it changes from machine to machine.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "Rehearsal of the map, the inventory of your machine, and the map of your loop.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Watch the trifecta close and open",
+          "min": "5 min",
+          "texto": "Clone the course repository into ~/projetos and run the \"before and after the cut\" block.",
+          "pronto": "triagem ends with <code>TRÍADE: violada em triagem</code> and <code>saída: 1</code>; triagem-cortada ends with <code>TRÍADE: nenhuma sessão autônoma com as três (2 sessões)</code> and <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Inventory of your machine",
+          "min": "10 min",
+          "texto": "Run the inventory block. Open /tmp/matriz.md and mark, line by line, the three columns for what each server really does. Add by hand what isn't MCP: shell, browser, message sending from your bot.",
+          "pronto": "<code>python3 inventario.py --demo</code> ends with <code>As três pernas podem estar juntas</code> and <code>grep -c \"|\" /tmp/matriz.md</code> prints a number greater than zero."
+        },
+        {
+          "id": "e3",
+          "titulo": "E3 · The map of your loop",
+          "min": "15 min",
+          "texto": "Copy kit/mapas/triagem.json to ~/meu-mapa.json and describe your loop: one session per context, each tool with the legs it marks. If any session closes, cut a leg in the map and in the loop.",
+          "pronto": "<code>python3 $K/triade.py ~/meu-mapa.json; echo $?</code> → the last line starts with <code>TRÍADE:</code> and the code is <code>0</code> (or <code>1</code> with the session noted to fix in lesson 2)."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "perguntas": [
+        {
+          "p": "What are the three legs of the lethal trifecta?",
+          "opcoes": [
+            "Model, prompt, and tool",
+            "Private data, third-party content, and an outbound channel",
+            "Read, write, and execute",
+            "Network, disk, and memory"
+          ],
+          "certa": 1,
+          "explica": "With all three in the same session, whoever writes the third-party content can tell the agent to take the private data out. Read/write/execute is file permission, a different thing.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "No tool in your session marks all three legs by itself. Is the session safe?",
+          "opcoes": [
+            "Yes",
+            "Not necessarily: the legs add up in the session",
+            "Only if the model is the top of the subscription",
+            "Only if the prompt says to ignore instructions"
+          ],
+          "certa": 1,
+          "explica": "A fetch, a customer database, and an email send, each harmless, close the trifecta together. That's why triade.py adds them up per session.",
+          "ref": "codigo",
+          "cert": true
+        },
+        {
+          "p": "Which leg is usually the cheapest to cut?",
+          "opcoes": [
+            "Private data",
+            "Third-party content",
+            "The outbound channel: a fixed destination in the code and no network",
+            "None: the right answer is an injection detector"
+          ],
+          "certa": 2,
+          "explica": "Fixing the destination and turning off the network rarely gets in the way of the work. An injection detector is another model that can be fooled, not a cut leg.",
+          "ref": "passos"
+        },
+        {
+          "p": "Why is \"ignore instructions in the content\" in the prompt not the defense?",
+          "opcoes": [
+            "Because the model doesn't read the system prompt",
+            "Because it fails often enough; the defense is structural",
+            "Because the docs forbid it",
+            "Because it slows the agent down"
+          ],
+          "certa": 1,
+          "explica": "It helps, but it doesn't guarantee anything. The guarantee comes from the session not having all three legs, which doesn't depend on the model resisting.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Three legs, one session",
+          "texto": "Private data + third-party content + outbound channel = any text it reads can command the leak."
+        },
+        {
+          "t": "Remove one per session",
+          "texto": "The map marks each tool; the risk is what the session sees together."
+        },
+        {
+          "t": "Cut, don't ask",
+          "texto": "Fixed destination, no network, reader with no data: structure, not prompt."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Going further",
+      "links": [
+        {
+          "t": "Simon Willison: The lethal trifecta for AI agents (06/16/2025)",
+          "href": "https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/",
+          "icone": "lupa"
+        },
+        {
+          "t": "Lethal Trifecta (INEMA): guide, CHECKLIST and inventario.py",
+          "href": "https://inematds.github.io/triade-letal/guia/",
+          "icone": "escudo"
+        },
+        {
+          "t": "Help Net Security: OWASP and prompt injection flaws (06/11/2026)",
+          "href": "https://helpnetsecurity.com/2026/06/11/owasp-prompt-injection-ai-security-failures",
+          "icone": "lupa"
+        },
+        {
+          "t": "kit/triade.py",
+          "href": "https://github.com/inematds/loop-r-eng-seguranca-v72/blob/main/kit/triade.py",
+          "icone": "arquivo"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,334 @@
+{
+  "slug": "auditoria",
+  "num": 8,
+  "menu": "Audit",
+  "titulo": "Security audit of your loop",
+  "titulo_curto": "Loop audit",
+  "minutos": 20,
+  "lead": "Everything the course built fits in one file: the map of your loop's sessions, with each session's tools and controls. auditar.py reads the map, checks the trifecta, the Rule of Two, permissions, guard, proven isolation, network, gate and caps, and writes the checklist of what's missing. You fix it, audit again and set the next review.",
+  "objetivo": "audit your loop with the session map, generate the checklist of what's missing and set the date of the next review.",
+  "competencias": [
+    "audit-the-loop-with-the-map",
+    "generate-the-security-checklist",
+    "review-security-on-a-schedule"
+  ],
+  "aprende": [
+    {
+      "icone": "lista",
+      "t": "The full map: tools and controls per session"
+    },
+    {
+      "icone": "check",
+      "t": "Eight items per session, each with the lesson that fixes it"
+    },
+    {
+      "icone": "arquivo",
+      "t": "The checklist in Markdown, generated and versioned in the project"
+    },
+    {
+      "icone": "calendario",
+      "t": "Re-audit: with every new tool, every new machine"
+    }
+  ],
+  "hero_alt": "Inspection clipboard on top of an open server rack, with a lit flashlight shining on the cables.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Map, audit, fix",
+      "sub": "Click each step.",
+      "nos": [
+        {
+          "icone": "lista",
+          "titulo": "Map",
+          "sub": "sessions and controls",
+          "detalhe": "The JSON from lessons 1 and 2, with a controles block per session: motor, deny, sandbox, hooks, prova_isolamento, rede, porta and tetos."
+        },
+        {
+          "icone": "lupa",
+          "titulo": "auditar.py",
+          "sub": "8 items per session",
+          "forte": true,
+          "detalhe": "Trifecta, Rule of Two, permissions (minimal deny in Claude, -s in Codex), guard hook, proven isolation, network vs. private data, irreversible through the gate, caps. Each failure says which lesson fixes it."
+        },
+        {
+          "icone": "arquivo",
+          "titulo": "Checklist",
+          "sub": "--md",
+          "detalhe": "The same result in Markdown, with [x] and [ ], to version in the project and review with whoever else runs the loop."
+        },
+        {
+          "icone": "calendario",
+          "titulo": "Re-audit",
+          "sub": "with a date",
+          "detalhe": "New tool, new MCP, new machine or new version of Claude Code or Codex: the map changes and the isolation proof gets stale. Audit again."
+        }
+      ],
+      "volta": "Fixed it? Audit again until APROVADA",
+      "legenda": "auditar.py checks the map, not the machine: you're the one who guarantees the map is true, with the proofs from lessons 4 to 7."
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Rehearsal: the loop before and after",
+      "sub": "meu-loop.json is the nightly fixer from lesson 2 in a single session, with a narrow deny and no isolation proof. meu-loop-seguro.json is the same loop after the course.",
+      "blocos": [
+        {
+          "rot": "Terminal · audit both maps",
+          "icone": "play",
+          "conteudo": "K=~/projetos/loop-r-eng-seguranca-v72/kit\npython3 $K/auditar.py $K/mapas/meu-loop.json --md /tmp/ensaio-seg/checklist.md; echo \"saída: $?\"\npython3 $K/auditar.py $K/mapas/meu-loop-seguro.json | tail -1; echo \"saída: $?\""
+        },
+        {
+          "rot": "File · kit/mapas/meu-loop.json (fictional)",
+          "icone": "arquivo",
+          "conteudo": "{\n  \"loop\": \"corretor noturno de bugs (primeira versão, fictícia)\",\n  \"sessoes\": [\n    {\n      \"nome\": \"corretor\",\n      \"ferramentas\": [\n        { \"nome\": \"ler o texto da issue\", \"terceiros\": true },\n        { \"nome\": \"ler o repositório privado e o .env\", \"privado\": true },\n        { \"nome\": \"editar e rodar comandos\", \"muda_estado\": true },\n        { \"nome\": \"git push e comentar no PR\", \"saida\": true, \"muda_estado\": true }\n      ],\n      \"controles\": {\n        \"motor\": \"claude\",\n        \"deny\": [\"Bash(rm -rf *)\"],\n        \"hooks\": [],\n        \"rede\": true,\n        \"tetos\": { \"tempo\": \"2h\" }\n      }\n    }\n  ]\n}"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>## corretor\n  FALHA tríade letal → corte uma perna: leitor sem dados nem saída que devolve só campos (aula 1)\n  FALHA Regra de Dois → no máximo 2 de A/B/C por sessão, ou nova sessão de contexto limpo, ou humano (aula 2)\n  FALHA permissões (deny mínimo) → acrescente ao deny: rm, push, rede, env (kit/permissoes/executar.json, aula 4)\n  FALHA hook de guarda → ligue a guarda.py em PreToolUse (aula 5)\n  FALHA isolamento provado → rode o prova-isolamento.sh com o mesmo wrapper do loop e anote a data (aula 6)\n  FALHA rede x dados privados → sessão que lê dado privado roda sem rede (aula 6)\n  FALHA irreversível pede humano → envio, push e apagar passam pela porta.py (aula 7)\n  FALHA tetos de tempo e memória → timeout + MemoryMax em cada ciclo (aula 7; curso 2, aula 6)\nAUDITORIA: 0/8 itens OK — REPROVADA\nchecklist gravado em /tmp/ensaio-seg/checklist.md\nsaída: 1\nAUDITORIA: 22/22 itens OK — APROVADA\nsaída: 0</pre><p>The safe map has three sessions (reader, fixer, publish) and passes all 22 items. The publish session combines all three legs, but with a human on every action.</p>"
+          },
+          {
+            "rot": "Common mistake: the optimistic map",
+            "html": "<p>Setting \"rede\": false without having run prova-isolamento.sh, or \"porta\": true while a send is still direct in the code, makes the audit approve an open loop. Every control in the map needs a proof from the earlier lessons next to it.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Final practice",
+      "sub": "Audit your loop until it passes.",
+      "exercicios": [
+        {
+          "id": "e21",
+          "titulo": "E21 · Audit rehearsal",
+          "min": "5 min",
+          "texto": "Run the rehearsal block and open /tmp/ensaio-seg/checklist.md.",
+          "pronto": "<code>AUDITORIA: 0/8 itens OK — REPROVADA</code> with <code>saída: 1</code>, and <code>AUDITORIA: 22/22 itens OK — APROVADA</code> with <code>saída: 0</code>."
+        },
+        {
+          "id": "e22",
+          "titulo": "E22 · The complete map of your loop",
+          "min": "30 min",
+          "texto": "Add the controles block of each session to the ~/meu-mapa.json from lessons 1 and 2, with the proofs you have already run: the deny from lesson 4, the guard from lesson 5, the isolation proof from lesson 6, the gate and caps from lesson 7.",
+          "pronto": "<code>python3 $K/auditar.py ~/meu-mapa.json --md SEGURANCA.md</code> prints an <code>AUDITORIA:</code> line and writes <code>SEGURANCA.md</code> in the project."
+        },
+        {
+          "id": "e23",
+          "titulo": "E23 · Until it passes, with a date",
+          "min": "60 min",
+          "texto": "Fix one item at a time, in list order, redoing the proof from the lesson indicated. Commit SEGURANCA.md and put the next audit on the calendar (the generator below makes the .ics).",
+          "pronto": "<code>python3 $K/auditar.py ~/meu-mapa.json; echo $?</code> → <code>APROVADA</code> and <code>0</code>, and <code>git log --oneline -1 -- SEGURANCA.md</code> shows the commit."
+        }
+      ]
+    },
+    {
+      "tipo": "mapa",
+      "titulo": "The course map",
+      "sub": "Four deliverables, in order. Click an exercise to see its \"done when\".",
+      "degraus": [
+        {
+          "aula": "dois",
+          "icone": "camadas",
+          "quando": "Day 1",
+          "titulo": "Map",
+          "sub": "lessons 1 and 2",
+          "saida": "Loop map with no autonomous session holding all three legs.",
+          "passo": "triade.py passing the lethal trifecta and the Rule of Two."
+        },
+        {
+          "aula": "injecao",
+          "icone": "alvo",
+          "quando": "Day 2",
+          "titulo": "Separate",
+          "sub": "lesson 3",
+          "saida": "A reader that returns only fields, and a canary in the loop.",
+          "passo": "Requires day 1. Rehearsal of the three agents and canário ausente in your output."
+        },
+        {
+          "aula": "sandbox",
+          "icone": "escudo",
+          "quando": "Days 3 and 4",
+          "titulo": "Lock down",
+          "sub": "lessons 4 to 6",
+          "saida": "A deny per step, the guard on, and isolation proven.",
+          "passo": "Requires day 2. regra.py, provar-guarda.sh and prova-isolamento.sh with your loop's wrapper."
+        },
+        {
+          "aula": "auditoria",
+          "icone": "portao",
+          "quando": "Day 5",
+          "titulo": "Gate and audit",
+          "sub": "lessons 7 and 8",
+          "saida": "Irreversible actions through the gate, and SEGURANCA.md approved and dated.",
+          "passo": "Requires everything before. Gate, systemd with a cap, and auditar.py until APROVADA."
+        }
+      ],
+      "resultado": {
+        "titulo": "By the end of the course",
+        "texto": "A loop where no autonomous session holds all three legs, each step has only the permission it uses, the lock was proven on your machine, and the irreversible waits for you.",
+        "total": "23 exercises"
+      },
+      "rolagem_fim": {
+        "titulo": "The whole course",
+        "texto": "Map, separate, lock down, and set the gate. Only move on to the next deliverable when the \"done when\" of the previous one is true."
+      },
+      "legenda": "Mandatory order: locking down a badly mapped loop protects the wrong session."
+    },
+    {
+      "tipo": "gerador",
+      "titulo": "Generate your plan with dates",
+      "sub": "Pick a start date and how much time you have per week. The plan lists the 23 exercises in order.",
+      "curso": "Autonomous Loop Security",
+      "horas_padrao": 5,
+      "degraus": [
+        {
+          "titulo": "Lesson 1 · The lethal trifecta",
+          "aula": "triade"
+        },
+        {
+          "titulo": "Lesson 2 · Rule of Two",
+          "aula": "dois"
+        },
+        {
+          "titulo": "Lesson 3 · Injection through content",
+          "aula": "injecao"
+        },
+        {
+          "titulo": "Lesson 4 · Permissions per step",
+          "aula": "permissoes"
+        },
+        {
+          "titulo": "Lesson 5 · Guard hooks",
+          "aula": "hooks"
+        },
+        {
+          "titulo": "Lesson 6 · Proven sandbox",
+          "aula": "sandbox"
+        },
+        {
+          "titulo": "Lesson 7 · Irreversible and outside the terminal",
+          "aula": "irreversivel"
+        },
+        {
+          "titulo": "Lesson 8 · Loop audit",
+          "aula": "auditoria"
+        }
+      ],
+      "txt": {
+        "titulo": "Plan — Autonomous Loop Security",
+        "inicio": "Start",
+        "ritmo": "Pace",
+        "termino": "Expected finish",
+        "ate": "by",
+        "pronto": "done when",
+        "semanas": "weeks",
+        "travou": "## What got blocked and the rule I created",
+        "h": "h per week",
+        "exs": "exercises"
+      }
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Final test",
+      "perguntas": [
+        {
+          "p": "auditar.py approved your map. Is the loop safe?",
+          "opcoes": [
+            "Yes, the script guarantees it",
+            "Only if the map is true: every control needs the proof from lessons 4 to 7",
+            "Only if it runs every day",
+            "Only with the top model"
+          ],
+          "certa": 1,
+          "explica": "The script checks the map, not the machine. An optimistic map approves an open loop.",
+          "ref": "codigo",
+          "cert": true
+        },
+        {
+          "p": "What is the course order for closing a loop?",
+          "opcoes": [
+            "Sandbox, then map",
+            "Map the sessions, separate the reader, lock down (permission, hook, sandbox) and set the gate",
+            "Gate first, the rest later",
+            "Doesn't matter"
+          ],
+          "certa": 1,
+          "explica": "Without the map, you lock down the wrong session. The locks come after you know what each session combines.",
+          "ref": "mapa",
+          "cert": true
+        },
+        {
+          "p": "When should you re-audit?",
+          "opcoes": [
+            "Never, if it passed",
+            "Every new tool or MCP, new machine, or new version of Claude Code or Codex",
+            "Only after an incident",
+            "Once a year"
+          ],
+          "certa": 1,
+          "explica": "A new tool can bring a leg; a new machine may not have the lock the previous one had (lesson 6).",
+          "ref": "diagrama"
+        },
+        {
+          "p": "One session combines A, B and C, and you can't split it. What does the map need to say?",
+          "opcoes": [
+            "Nothing",
+            "\"humano\": true, with the gate on every outbound action",
+            "\"rede\": true",
+            "\"nova_sessao\": true"
+          ],
+          "certa": 1,
+          "explica": "With all three, the session is not autonomous: supervision on every action, as the Rule of Two requires.",
+          "ref": "codigo"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "The course in three sentences",
+      "itens": [
+        {
+          "t": "No autonomous session with all three",
+          "texto": "The lethal trifecta and the Rule of Two decide how to split the loop."
+        },
+        {
+          "t": "A guard proven, not promised",
+          "texto": "deny, hook, and sandbox, each with its own proof on your machine."
+        },
+        {
+          "t": "The irreversible waits for you",
+          "texto": "A gate with a hash, out of the agent's reach, and a dated audit."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Keep going from here",
+      "links": [
+        {
+          "t": "Next: course 5, The loop that learns (LOOP-R applied)",
+          "href": "https://inematds.github.io/loop-r-eng-aprende-v72/",
+          "icone": "seta"
+        },
+        {
+          "t": "LOOP-R Engineering Track",
+          "href": "https://eventos.inema.pro/loop-r-engenharia/",
+          "icone": "camadas"
+        },
+        {
+          "t": "kit/auditar.py",
+          "href": "https://github.com/inematds/loop-r-eng-seguranca-v72/blob/main/kit/auditar.py",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Goal: Agents Rule of Two",
+          "href": "https://ai.meta.com/blog/practical-ai-agent-security/",
+          "icone": "lupa"
+        }
+      ]
+    }
+  ]
+}

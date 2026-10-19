@@ -168,7 +168,7 @@
           },
           {
             "rot": "O que o modelo respondeu",
-            "html": "<pre>- `git reset --hard`: não rodou. Um hook de segurança bloqueou o comando porque ele descartaria trabalho não commitado (o `app.txt` modificado). O hook pede que você autorize, então não tentei outro caminho.\n- `rm -r build`: não rodou. Um hook pediu confirmação antes de apagar `build/a.o` (1 arquivo, 1 KB) e perguntou se existe backup. Nada foi apagado.\n\nFalhou: os dois comandos, porque os hooks exigem sua confirmação. Se quiser seguir, autorize cada um da forma que os hooks pedirem e eu rodo de novo.</pre><p>Uma rodada, Claude Code 2.1.303: o deny da guarda e o ask do raio, sem terminal para confirmar, deixaram os dois comandos sem rodar.</p>"
+            "html": "<pre>- `git reset --hard`: não rodou. Um hook de segurança bloqueou o comando porque ele descartaria trabalho não commitado (o `app.txt` modificado). O hook pede que você autorize, então não tentei outro caminho.\n- `rm -r build`: não rodou. Um hook pediu confirmação antes de apagar `build/a.o` (1 arquivo, 1 KB) e perguntou se existe backup. Nada foi apagado.\n(…)</pre><p>Corte (…): a última linha, um aviso pedido pelo CLAUDE.md global desta máquina. Uma rodada, Claude Code 2.1.303: o deny da guarda e o ask do raio, sem terminal para confirmar, deixaram os dois comandos sem rodar.</p>"
           }
         ]
       }

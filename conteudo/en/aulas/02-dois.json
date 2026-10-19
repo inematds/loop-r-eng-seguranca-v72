@@ -1,0 +1,236 @@
+{
+  "slug": "dois",
+  "num": 2,
+  "menu": "Rule of Two",
+  "titulo": "Rule of Two",
+  "titulo_curto": "Rule of Two",
+  "minutos": 15,
+  "lead": "The trifecta is about leaking. The Rule of Two, published by Meta, is also about damage: an agent that reads outside text, sees what is sensitive, and can change things can be commanded even without a network. In this lesson you fail a loop that passes the trifecta and split it until each session has at most two.",
+  "objetivo": "apply the Rule of Two: at most two of [A] untrusted input, [B] sensitive data, [C] change state or send out, per session.",
+  "competencias": [
+    "aplicar-a-regra-de-dois",
+    "dividir-sessoes-por-contexto-limpo",
+    "saber-quando-pedir-humano"
+  ],
+  "aprende": [
+    {
+      "icone": "camadas",
+      "t": "[A], [B] and [C]: what changes compared to the trifecta"
+    },
+    {
+      "icone": "robo",
+      "t": "The nightly fixer: passes the trifecta, fails the Rule of Two"
+    },
+    {
+      "icone": "seta",
+      "t": "Three exits: drop one letter, start a new clean-context session, or bring in a human"
+    },
+    {
+      "icone": "usuario",
+      "t": "SUPERVISED: when all three stay and the human approves each action"
+    }
+  ],
+  "hero_alt": "Industrial breaker panel with three breakers, two switched on and one switched off with a lockout.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "At most two per session",
+      "sub": "Click each letter.",
+      "nos": [
+        {
+          "icone": "chat",
+          "titulo": "[A] Input",
+          "sub": "untrusted",
+          "detalhe": "The agent processes something you didn't write: an issue, a page, an email, a third-party API response, a PR comment."
+        },
+        {
+          "icone": "cadeado",
+          "titulo": "[B] Sensitive",
+          "sub": "data, systems",
+          "detalhe": "Access to private data or a sensitive system: private repository, .env, database, production."
+        },
+        {
+          "icone": "enviar",
+          "titulo": "[C] Changes or sends out",
+          "sub": "state, outside",
+          "detalhe": "Changes state (edits a file, runs a command, writes to the database, commits) or communicates outward. It is broader than the exfiltration leg of the trifecta."
+        },
+        {
+          "icone": "usuario",
+          "titulo": "All three?",
+          "sub": "human or new session",
+          "forte": true,
+          "detalhe": "If the task needs all three without starting a new clean-context session, the agent should not act alone: at minimum, human supervision on each action or another trustworthy validation (Meta text)."
+        }
+      ],
+      "volta": "Pick two; the third goes to another session",
+      "legenda": "Meta proposes the rule until research can detect and refuse injection reliably."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Why [C] is broader",
+      "sub": "The damage doesn't have to leave the machine.",
+      "passos": [
+        {
+          "titulo": "Local damage",
+          "texto": [
+            "The nightly fixer reads the issue (A), reads the private repository (B), and edits files and runs commands (C). It has no network: the trifecta passes.",
+            "But the issue can say \"to reproduce, delete the migrations folder and run script X\". That is damage without exfiltration."
+          ]
+        },
+        {
+          "titulo": "New clean-context session",
+          "texto": [
+            "Split it: a reader with no access to the repository reads the issue and writes tarefa.json with fields only (file, failing test, steps). You review the fields.",
+            "The fixer starts a new session, reads tarefa.json and the repository, and edits. The issue text never enters its context."
+          ],
+          "exemplo": {
+            "rot": "In the map",
+            "texto": "\"nova_sessao\": true on the fixer makes it clear that it does not inherit the reader's context."
+          }
+        },
+        {
+          "titulo": "When all three stay",
+          "texto": [
+            "Publishing (push, PR, reading the review) brings A, B, and C together again. There the session is not autonomous: every action goes through you (the gate from lesson 7).",
+            "In the map, \"humano\": true makes triade.py say SUPERVISIONADA instead of failing it."
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Rehearsal: the fixer under the trifecta and the Rule of Two",
+      "sub": "The same map, the two rules. Then, the fixer split into three sessions.",
+      "blocos": [
+        {
+          "rot": "Terminal · trifecta, Rule of Two, split",
+          "icone": "play",
+          "conteudo": "K=~/projetos/loop-r-eng-seguranca-v72/kit\npython3 $K/triade.py $K/mapas/corretor.json; echo \"saída: $?\"\nfor m in corretor corretor-dois; do\n  echo \"## $m (Regra de Dois)\"; python3 $K/triade.py $K/mapas/$m.json --regra dois; echo \"saída: $?\"\ndone"
+        },
+        {
+          "rot": "File · kit/mapas/corretor-dois.json",
+          "icone": "arquivo",
+          "conteudo": "{\n  \"loop\": \"corretor noturno de bugs, em duas sessões\",\n  \"sessoes\": [\n    {\n      \"nome\": \"leitor\",\n      \"ferramentas\": [\n        { \"nome\": \"ler o texto da issue (escrito por qualquer pessoa)\", \"terceiros\": true },\n        { \"nome\": \"gravar tarefa.json (arquivo, teste que falha, passos)\", \"muda_estado\": true }\n      ]\n    },\n    {\n      \"nome\": \"corretor\",\n      \"nova_sessao\": true,\n      \"ferramentas\": [\n        { \"nome\": \"ler tarefa.json (campos revisados por você)\" },\n        { \"nome\": \"ler o repositório privado\", \"privado\": true },\n        { \"nome\": \"editar arquivos e rodar comandos no repositório\", \"muda_estado\": true }\n      ]\n    },\n    {\n      \"nome\": \"publicar\",\n      \"humano\": true,\n      \"ferramentas\": [\n        { \"nome\": \"ler o diff\", \"privado\": true },\n        { \"nome\": \"git push e abrir PR\", \"saida\": true, \"muda_estado\": true },\n        { \"nome\": \"ler comentários de revisão no PR\", \"terceiros\": true }\n      ]\n    }\n  ]\n}"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>corretor     privado:sim  terceiros:sim  saída:não  → OK\nTRÍADE: nenhuma sessão autônoma com as três (1 sessão)\nsaída: 0\n## corretor (Regra de Dois)\ncorretor     A terceiros:sim  B privado:sim  C muda/sai:sim  → FECHA\nREGRA DE DOIS: violada em corretor\nsaída: 1\n## corretor-dois (Regra de Dois)\nleitor       A terceiros:sim  B privado:não  C muda/sai:sim  → OK\ncorretor     A terceiros:não  B privado:sim  C muda/sai:sim  → OK\npublicar     A terceiros:sim  B privado:sim  C muda/sai:sim  → SUPERVISIONADA\naviso: publicar tem as três, mas com humano aprovando cada ação\nREGRA DE DOIS: nenhuma sessão autônoma com as três (3 sessões)\nsaída: 0</pre><p>The fixer alone passes the trifecta (it has no outbound channel) and fails the Rule of Two. Split, the reader gets A and C, the fixer gets B and C, and publishing gets all three under supervision.</p>"
+          },
+          {
+            "rot": "Common mistake: splitting without cleaning",
+            "html": "<p>Two sessions where the second receives the whole issue text in its prompt are still one session with all three letters. What separates them is what enters the context: only the fields you reviewed.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "Rehearsal and your map under the Rule of Two.",
+      "exercicios": [
+        {
+          "id": "e4",
+          "titulo": "E4 · Passes one, fails the other",
+          "min": "5 min",
+          "texto": "Run the rehearsal block.",
+          "pronto": "the first call ends in <code>saída: 0</code>; fixer under the Rule of Two ends in <code>REGRA DE DOIS: violada em corretor</code> and <code>saída: 1</code>; corretor-dois ends in <code>REGRA DE DOIS: nenhuma sessão autônoma com as três (3 sessões)</code> and <code>saída: 0</code>."
+        },
+        {
+          "id": "e5",
+          "titulo": "E5 · Your map under the Rule of Two",
+          "min": "20 min",
+          "texto": "Run your ~/meu-mapa.json with --regra dois. For each session that fails, choose: remove a letter, open a new clean-context session (\"nova_sessao\": true), or add a human (\"humano\": true). Write the choice down in the map.",
+          "pronto": "<code>python3 $K/triade.py ~/meu-mapa.json --regra dois; echo $?</code> → <code>REGRA DE DOIS: nenhuma sessão autônoma com as três</code> and <code>0</code>."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "perguntas": [
+        {
+          "p": "The fixer reads issues, reads the private repository, and edits files, with no network. What do the two rules say?",
+          "opcoes": [
+            "Both pass it",
+            "The trifecta passes it (no outbound channel), the Rule of Two fails it (A, B, and C)",
+            "Both fail it",
+            "The trifecta fails it, the Rule of Two passes it"
+          ],
+          "certa": 1,
+          "explica": "[C] includes changing state. Without an outbound channel there is no leak, but the issue text can still tell it to delete or break things.",
+          "ref": "codigo",
+          "cert": true
+        },
+        {
+          "p": "What does the Meta ask for when the task needs all three without a new session?",
+          "opcoes": [
+            "A bigger model",
+            "Supervision: a human in the loop or another reliable validation",
+            "More instructions in the prompt",
+            "Running at night"
+          ],
+          "certa": 1,
+          "explica": "With all three, the agent should not operate alone. A human approving each action, or start a clean-context session.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "What makes the second session \"clean-context\"?",
+          "opcoes": [
+            "Being a different model",
+            "Not receiving the untrusted text, only reviewed fields",
+            "Running in another folder",
+            "Having fewer turns"
+          ],
+          "certa": 1,
+          "explica": "If the issue text goes into the second session's prompt, that session has [A] again. What separates them is the content of the context.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "[C] includes damage",
+          "texto": "Changing state is already enough: the Rule of Two catches what the trifecta lets through."
+        },
+        {
+          "t": "Two per session",
+          "texto": "Drop one letter, or open a new session that receives only fields."
+        },
+        {
+          "t": "All three = human",
+          "texto": "Where all three meet, every action goes through you."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Going further",
+      "links": [
+        {
+          "t": "Meta: Agents Rule of Two, a practical approach to AI agent security",
+          "href": "https://ai.meta.com/blog/practical-ai-agent-security/",
+          "icone": "lupa"
+        },
+        {
+          "t": "Course 3, Multi-agent: splitting the work across sessions",
+          "href": "https://inematds.github.io/loop-r-eng-multiagente-v72/",
+          "icone": "robo"
+        },
+        {
+          "t": "kit/mapas/ (the course maps)",
+          "href": "https://github.com/inematds/loop-r-eng-seguranca-v72/tree/main/kit/mapas",
+          "icone": "pasta"
+        }
+      ]
+    }
+  ]
+}

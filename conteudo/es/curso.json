@@ -1,0 +1,185 @@
+{
+  "id": "loop-r-eng-seguranca-v72",
+  "lang": "es",
+  "url": "https://inematds.github.io/loop-r-eng-seguranca-v72/es/",
+  "nome": "Seguridad del Loop Autónomo",
+  "sub": "Formación LOOP-R Ingeniería · curso 4",
+  "volta": {
+    "t": "Área LOOP-R Ingeniería",
+    "href": "https://eventos.inema.pro/loop-r-engenharia/"
+  },
+  "lado_card": {
+    "rot": "El kit de este curso",
+    "t": "kit/ en el repositorio del curso",
+    "texto": "Mapa de la tríada, agente falso y canario, reglas de permiso, guardia por hook, prueba de aislamiento, compuerta de lo irreversible y auditoría. Ensayos sin costo, probados el 19/10/2026.",
+    "link": "Abrir la carpeta kit/ en GitHub",
+    "href": "https://github.com/inematds/loop-r-eng-seguranca-v72/tree/main/kit"
+  },
+  "rodape": "INEMA.CLUB · contenido abierto y gratuito · formato INEMA Learning v7.2 · Formación LOOP-R Ingeniería, curso 4 de 6 · <a href=\"https://eventos.inema.pro/loop-r-engenharia/\">eventos.inema.pro/loop-r-engenharia</a> · <a href=\"https://github.com/inematds/loop-r-eng-seguranca-v72/tree/main/kit\">kit del curso en GitHub</a> · <a href=\"https://inema.club/\">inema.club</a>",
+  "videos": {},
+  "inicio": {
+    "kicker": "Formación LOOP-R Ingeniería · curso 4 de 6 · 8 clases",
+    "titulo": "Seguridad del Loop Autónomo: el agente que corre solo no puede tenerlo todo al mismo tiempo",
+    "lead": "Tríada letal, Regla de Dos, inyección por el contenido leído, permisos por etapa, hooks de guardia, sandbox probado, compuerta para lo irreversible y una auditoría de tu loop. Defensa para quien corre sus propios agentes, con ensayos locales que no gastan cuota.",
+    "cta": "Empezar por la clase 1",
+    "cta2": {
+      "t": "Ver el área de la formación",
+      "href": "https://eventos.inema.pro/loop-r-engenharia/"
+    },
+    "capa_alt": "Sala de servidores oscura con un rack detrás de una puerta de vidrio cerrada con un candado pequeño.",
+    "numeros": [
+      {
+        "v": "8",
+        "t": "clases"
+      },
+      {
+        "v": "23",
+        "t": "ejercicios con salida esperada"
+      },
+      {
+        "v": "10",
+        "t": "ensayos locales, sin llamar al modelo"
+      },
+      {
+        "v": "3",
+        "t": "pasos reales, una llamada cada uno"
+      }
+    ],
+    "aulas_titulo": "Las clases",
+    "aulas_sub": "En el orden en que cierras las puertas: mapear el riesgo, limitar lo que cada sesión junta, ver la inyección, permisos, hooks, sandbox, lo irreversible y la auditoría.",
+    "blocos": [
+      {
+        "t": "Para quién es",
+        "itens": [
+          "Quien corre Claude Code o Codex solos por horas, en loop, cron o systemd, en sus propios proyectos.",
+          "Quien le dio al agente lectura de issues, páginas o correos y acceso al repositorio al mismo tiempo.",
+          "Quien quiere saber, con pruebas, qué puede y qué no puede hacer el agente en su propia máquina."
+        ]
+      },
+      {
+        "t": "Qué sales haciendo",
+        "itens": [
+          "Mapear cada sesión del loop en las tres patas de la tríada y en la Regla de Dos, y cortar donde se cierra.",
+          "Separar a quien lee contenido de afuera de quien tiene el secreto, y atrapar la fuga con un canario.",
+          "Escribir deny por etapa, activar hooks que nieguen lo irreversible y probar que el sandbox aguanta.",
+          "Poner envío, push y borrado detrás de una compuerta humana y auditar el loop con un checklist fechado."
+        ]
+      },
+      {
+        "t": "Antes de empezar",
+        "itens": [
+          "Linux con git, Python 3 y Node. macOS sirve para casi todo; las pruebas de sandbox y systemd son de Linux.",
+          "Claude Code y Codex entrando por tu suscripción, solo para los pasos marcados \"real\".",
+          "Recomendado: el curso 0 (Base). El curso 2 (Ejecución Larga) corre el loop que este curso protege."
+        ]
+      }
+    ]
+  },
+  "ui": {
+    "pular": "Saltar al contenido",
+    "aulas": "Clases",
+    "concluido": "completada",
+    "aula": "Clase",
+    "nesta_aula": "En esta clase vas a aprender:",
+    "objetivo": "Objetivo:",
+    "proxima_aula": "Siguiente clase",
+    "aula_anterior": "Clase anterior",
+    "voltar_inicio": "Volver al inicio del curso",
+    "marcar_concluida": "Marcar clase como completada",
+    "dg_dica": "Haz clic en cada bloque del diagrama para ver qué hace.",
+    "copiar": "Copiar",
+    "copiado": "Copiado",
+    "selo_simulacao": "Simulación: ejemplo ilustrativo",
+    "selo_real": "Ejemplo del repositorio",
+    "pronto_quando": "Listo cuando:",
+    "fiz": "Hice este ejercicio",
+    "video_pagina": "Página del video con guion",
+    "pergunta": "Pregunta",
+    "de": "de",
+    "cert_tag": "competencia",
+    "correto": "Correcto",
+    "errado": "No es esa",
+    "quiz_aguarda": "Elige una alternativa. La explicación aparece después de tu intento.",
+    "proxima_pergunta": "Siguiente pregunta",
+    "quiz_ver": "Ver resultado",
+    "quiz_fim": "Prueba completada",
+    "quiz_total": "Acertaste {a} de {n}. Si aciertas todas, la clase se marca como completada.",
+    "aparencia": "Apariencia",
+    "tamanho_texto": "Tamaño del texto",
+    "tema": "Tema",
+    "tema_escuro": "Oscuro",
+    "tema_papel": "Papel claro",
+    "role_dica": "Desplaza la página: cada etapa de abajo enciende su parte del diagrama.",
+    "pre_requisito": "requiere",
+    "ver_aula": "Ver la clase",
+    "mapa_dica": "Haz clic en un ejercicio para ver qué hacer y el \"listo cuando\".",
+    "etapas": "Etapas",
+    "exercicios": "ejercicios",
+    "rever": "Repasar:",
+    "revisar_erradas": "Revisar las erróneas",
+    "refazer": "Rehacer la prueba",
+    "h_semana": "h por semana",
+    "data_inicio": "Fecha de inicio",
+    "ritmo": "Tiempo disponible",
+    "gerar_plano": "Generar mi plan",
+    "baixar_md": "Descargar plan.md",
+    "baixar_ics": "Descargar para el calendario (.ics)",
+    "ind_estudo": "Estudio (clases)",
+    "ind_pratica": "Práctica declarada",
+    "ind_nota": "Práctica = ejercicios que marcaste como hechos. La comprobación viene en el examen de la certificación.",
+    "estudo": {
+      "titulo": "Tu estudio",
+      "continuar": "Continuar donde lo dejé",
+      "comecar": "Empezar por la clase 1",
+      "cta_continuar": "Continuar la clase {n}",
+      "hoje": "hoy",
+      "ontem": "ayer",
+      "ha_dias": "hace {n} días",
+      "desempenho": "Desempeño en las pruebas",
+      "notas": "Mis anotaciones",
+      "dados": "Copiar mis datos",
+      "sem_testes": "Aún no has hecho ninguna prueba. La prueba está al final de cada clase.",
+      "nao_fez": "prueba aún no hecha",
+      "ultimo": "Última",
+      "melhor": "Mejor",
+      "tentativas": "intentos",
+      "tentativa": "intento",
+      "tudo_certo": "Acertaste todo en la última prueba.",
+      "rever": "Para repasar",
+      "resposta": "Respuesta correcta:",
+      "ir_teste": "Rehacer la prueba",
+      "sem_notas": "Aún no hay anotaciones. En la clase, selecciona un fragmento del texto y toca Marcar o Anotar.",
+      "so_marcado": "(solo marcado)",
+      "marcar": "Marcar",
+      "anotar": "Anotar",
+      "salvar": "Guardar",
+      "apagar": "Borrar marca",
+      "fechar": "Cerrar",
+      "nota_ph": "Escribe tu anotación sobre este fragmento…",
+      "um_bloco": "Marca dentro de un solo párrafo.",
+      "nao_marca": "Este fragmento no se puede marcar.",
+      "dados_exp": "Tu progreso, tus anotaciones y las notas de las pruebas se quedan solo en este navegador. Descarga una copia (.json) para guardarla o para continuar en otro computador o navegador; allí, carga la copia. Cargar se suma a lo que ya existe y no borra nada.",
+      "exportar": "Descargar copia",
+      "importar": "Cargar copia",
+      "import_ok": "Copia cargada ({n} elementos). Actualizando la página…",
+      "import_erro": "Archivo no reconocido. No se cambió nada.",
+      "import_outro": "Esta copia es de otro curso. No se cambió nada.",
+      "export_ok": "Copia descargada."
+    },
+    "conv_dica": "Elige tu respuesta. El comentario aparece justo después y la conversación sigue según tu elección.",
+    "conv_voce": "Tú",
+    "conv_escolha": "Tu respuesta",
+    "conv_boa": "Buena elección",
+    "conv_meio": "Se puede mejorar",
+    "conv_ruim": "Elección débil",
+    "conv_fim": "Fin de la conversación",
+    "conv_placar": "Hiciste {p} de {m} puntos posibles.",
+    "conv_licao": "Lección:",
+    "conv_recomecar": "Reiniciar la conversación",
+    "conv_feita": "Tu mejor puntaje: {p} de {m} puntos.",
+    "comecar": "Comenzar la clase",
+    "nesta_vai": "En esta clase vas a",
+    "trocar_tema": "Cambiar tema claro/oscuro"
+  },
+  "icone": "escudo"
+}

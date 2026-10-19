@@ -1,0 +1,305 @@
+{
+  "slug": "hooks",
+  "num": 5,
+  "menu": "Hooks",
+  "titulo": "Hooks como guardia: antes de la herramienta, contra borrar y colisionar",
+  "titulo_curto": "Hooks de guardia",
+  "minutos": 20,
+  "lead": "Una regla de permiso compara texto; un hook ejecuta código antes de cada herramienta y puede mirar el disco. En esta clase activas tres guardias PreToolUse: una niega lo irreversible y los archivos del juez, otra muestra cuántos archivos borraría un rm y pide confirmación, y la tercera avisa cuando otra sesión tocó el mismo archivo.",
+  "objetivo": "activar un hook PreToolUse que niegue lo irreversible, pida confirmación al borrar y avise de colisión entre sesiones.",
+  "competencias": [
+    "escrever-hook-pretooluse",
+    "negar-o-irreversivel",
+    "testar-hook-sem-modelo"
+  ],
+  "aprende": [
+    {
+      "icone": "portao",
+      "t": "PreToolUse: deny, ask o nada, antes de la herramienta"
+    },
+    {
+      "icone": "x",
+      "t": "guarda.py: push forzado, reset --hard, find -delete, archivos del juez"
+    },
+    {
+      "icone": "lupa",
+      "t": "raio.mjs y colisao.mjs del inema-agent-runtime"
+    },
+    {
+      "icone": "terminal",
+      "t": "Probar el hook con JSON falso y después en una sesión real"
+    }
+  ],
+  "hero_alt": "Llave de seguridad roja con tapa levantable junto a un botón de emergencia en un panel industrial.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Antes de cada herramienta",
+      "sub": "Haz clic en cada etapa.",
+      "nos": [
+        {
+          "icone": "robo",
+          "titulo": "Llamada",
+          "sub": "Bash, Edit…",
+          "detalhe": "El agente decide llamar a una herramienta. Antes de que se ejecute, Claude Code le manda al hook un JSON con tool_name, tool_input, cwd y session_id."
+        },
+        {
+          "icone": "escudo",
+          "titulo": "Hook",
+          "sub": "deny, ask, nada",
+          "forte": true,
+          "itens": [
+            {
+              "icone": "x",
+              "t": "guarda.py: deny"
+            },
+            {
+              "icone": "usuario",
+              "t": "raio.mjs: ask con conteo"
+            },
+            {
+              "icone": "usuario",
+              "t": "colisao.mjs: ask si hay otra sesión"
+            }
+          ],
+          "detalhe": "El hook responde en hookSpecificOutput.permissionDecision: deny bloquea, ask pide confirmación, y no imprimir nada deja seguir el flujo normal."
+        },
+        {
+          "icone": "lista",
+          "titulo": "Reglas",
+          "sub": "deny y ask",
+          "detalhe": "La doc dice que el hook no pasa por encima de las reglas: un deny o ask del settings vale aunque el hook responda allow. Las capas se suman."
+        },
+        {
+          "icone": "terminal",
+          "titulo": "Herramienta",
+          "sub": "solo si pasó",
+          "detalhe": "Solo se ejecuta si ningún deny lo detuvo y, si hubo ask, alguien confirmó."
+        }
+      ],
+      "legenda": "Los hooks de contexto y handoff son del curso 2; aquí el hook es guardia."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Qué atrapa cada guardia",
+      "sub": "Tres archivos, tres trabajos.",
+      "passos": [
+        {
+          "titulo": "guarda.py (deny)",
+          "texto": [
+            "Niega lo que no tiene vuelta atrás: push forzado, reset --hard, git clean -f, checkout -- ., find -delete, rm recursivo en la raíz o en el HOME, pkill y killall, dd y mkfs.",
+            "Y niega Edit/Write en goal.md, tests/, .claude/ y en la carpeta de la propia guardia (GUARDA_PROTEGIDOS cambia la lista)."
+          ],
+          "exemplo": {
+            "rot": "Lección real de esta máquina",
+            "texto": "pkill -f con el patrón en la misma línea del shell mató al propio shell dos veces (15 y 16/09/2026): por eso pkill está en la lista."
+          }
+        },
+        {
+          "titulo": "raio.mjs (ask)",
+          "texto": [
+            "Antes de rm o git clean, cuenta lo que habría para borrar (git clean corre con -n, solo lista) y pide confirmación con el número de archivos, el tamaño y las primeras rutas.",
+            "Del inema-agent-runtime (receta R7). No borra nada: solo lee el disco."
+          ]
+        },
+        {
+          "titulo": "colisao.mjs (ask)",
+          "texto": [
+            "Antes de editar, avisa si otra sesión editó el mismo archivo en los últimos 30 minutos, o si cambió por fuera (Codex, editor, persona).",
+            "El registro queda en ~/.local/state/inema-runtime/toques.json. La estrategia de colisión (worktree, cola) es del curso 3."
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Los hooks en el settings.json",
+      "sub": "Primero la guardia, luego el radio en Bash; guardia y colisión en las ediciones. Rutas suponiendo los dos repositorios en ~/projetos.",
+      "blocos": [
+        {
+          "rot": "Archivo · kit/hooks/settings-exemplo.json",
+          "icone": "arquivo",
+          "conteudo": "{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Bash\",\n        \"hooks\": [\n          { \"type\": \"command\", \"command\": \"python3 \\\"$HOME/projetos/loop-r-eng-seguranca-v72/kit/hooks/guarda.py\\\"\", \"timeout\": 10 },\n          { \"type\": \"command\", \"command\": \"node \\\"$HOME/projetos/inema-agent-runtime/runtime/mods/runtime-guarda/hooks/raio.mjs\\\"\", \"timeout\": 15 }\n        ]\n      },\n      {\n        \"matcher\": \"Edit|Write|MultiEdit|NotebookEdit\",\n        \"hooks\": [\n          { \"type\": \"command\", \"command\": \"python3 \\\"$HOME/projetos/loop-r-eng-seguranca-v72/kit/hooks/guarda.py\\\"\", \"timeout\": 10 },\n          { \"type\": \"command\", \"command\": \"node \\\"$HOME/projetos/inema-agent-runtime/runtime/mods/runtime-guarda/hooks/colisao.mjs\\\" pre\", \"timeout\": 10 }\n        ]\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Edit|Write|MultiEdit|NotebookEdit\",\n        \"hooks\": [\n          { \"type\": \"command\", \"command\": \"node \\\"$HOME/projetos/inema-agent-runtime/runtime/mods/runtime-guarda/hooks/colisao.mjs\\\" pos\", \"timeout\": 10 }\n        ]\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Ensayo: llamadas falsas, decisiones de verdad",
+      "sub": "El script envía a los hooks el mismo JSON que enviaría Claude Code e imprime la decisión. Ningún modelo.",
+      "blocos": [
+        {
+          "rot": "Terminal · guardia, radio y colisión",
+          "icone": "play",
+          "conteudo": "[ -d ~/projetos/inema-agent-runtime ] || git clone -q https://github.com/inematds/inema-agent-runtime ~/projetos/inema-agent-runtime\nbash ~/projetos/loop-r-eng-seguranca-v72/kit/hooks/provar-guarda.sh"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Salida capturada (19/10/2026)",
+            "html": "<pre>## guarda.py (nega o irreversível)\ngit push --force origin main       → deny\ngit reset --hard HEAD~3            → deny\nfind . -name '*.o' -delete         → deny\nrm -rf ~                           → deny\npkill -f servidor                  → deny\npython3 -m pytest -q               → -\nEdit tests/test_x.py               → deny\nEdit src/app.py                    → -\n## raio.mjs (apagar pede confirmação, com a contagem)\nrm -r build                        → ask\nrm -r nada                         → -\n## colisao.mjs (outra sessão editou há pouco)\nsessão B edita o mesmo arquivo    → ask\nsessão A edita de novo            → -</pre><p>\"-\" significa sin decisión: el flujo normal (reglas y modo) decide. El rm de una carpeta que no existe no pide nada, porque no hay nada que borrar.</p>"
+          },
+          {
+            "rot": "Error común: hook que solo avisa",
+            "html": "<p>Un hook que imprime un aviso en texto y sale con 0 no bloquea nada. Lo que bloquea es el JSON con permissionDecision (o salir con código 2, según la doc). Prueba siempre por el JSON, como hace el ensayo.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Real: la guardia en una sesión que libera todo",
+      "sub": "claude -p en bypassPermissions con el settings-exemplo.json, pidiendo git reset --hard y rm -r build en un repositorio de ensayo con un cambio sin commitear. Se comprueba el disco.",
+      "blocos": [
+        {
+          "rot": "Terminal · una llamada real",
+          "icone": "play",
+          "conteudo": "bash ~/projetos/loop-r-eng-seguranca-v72/kit/hooks/real.sh; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Salida capturada (19/10/2026)",
+            "html": "<pre>app.txt: mudança não commitada preservada\nbuild/a.o: continua lá\nsaída: 0</pre>"
+          },
+          {
+            "rot": "Lo que respondió el modelo",
+            "html": "<pre>- `git reset --hard`: não rodou. Um hook de segurança bloqueou o comando porque ele descartaria trabalho não commitado (o `app.txt` modificado). O hook pede que você autorize, então não tentei outro caminho.\n- `rm -r build`: não rodou. Um hook pediu confirmação antes de apagar `build/a.o` (1 arquivo, 1 KB) e perguntou se existe backup. Nada foi apagado.\n(…)</pre><p>Corte (…): la última línea, un aviso pedido por el CLAUDE.md global de esta máquina. Una ronda, Claude Code 2.1.303: el deny de la guardia y el ask del radio, sin terminal para confirmar, dejaron los dos comandos sin ejecutarse.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Práctica",
+      "sub": "Ensayo, sesión real y la guardia en tu proyecto.",
+      "exercicios": [
+        {
+          "id": "e12",
+          "titulo": "E12 · Decisiones de los tres hooks",
+          "min": "10 min",
+          "texto": "Ejecuta el ensayo. Clona inema-agent-runtime en ~/projetos si falta.",
+          "pronto": "seis líneas <code>→ deny</code> en la guardia, <code>rm -r build → ask</code>, <code>sessão B edita o mesmo arquivo → ask</code> y <code>sessão A edita de novo → -</code>."
+        },
+        {
+          "id": "e13",
+          "titulo": "E13 · La guardia en una sesión real",
+          "min": "5 min",
+          "texto": "Ejecuta el bloque real (una llamada, sale de tu cuota de suscripción).",
+          "pronto": "<code>app.txt: mudança não commitada preservada</code>, <code>build/a.o: continua lá</code> y <code>saída: 0</code>."
+        },
+        {
+          "id": "e14",
+          "titulo": "E14 · La guardia en tu proyecto",
+          "min": "15 min",
+          "texto": "Copia el bloque hooks de settings-exemplo.json al .claude/settings.json de tu proyecto. Si tu juez tiene otros archivos, exporta GUARDA_PROTEGIDOS antes de abrir Claude Code.",
+          "pronto": "<code>printf '{\"cwd\":\"%s\",\"tool_name\":\"Edit\",\"tool_input\":{\"file_path\":\"goal.md\"}}' \"$PWD\" | python3 $K/hooks/guarda.py | grep -c deny</code> → <code>1</code>, ejecutado en la carpeta del proyecto."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Prueba de la clase",
+      "perguntas": [
+        {
+          "p": "¿Qué devuelve un hook PreToolUse para bloquear?",
+          "opcoes": [
+            "Un texto de aviso y código 0",
+            "hookSpecificOutput.permissionDecision = deny",
+            "Cualquier cosa en stderr",
+            "No bloquea, solo registra"
+          ],
+          "certa": 1,
+          "explica": "deny bloquea, ask pide confirmación, nada deja seguir. Un aviso en texto con código 0 no bloquea.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "El hook respondió allow, pero el settings tiene deny Bash(git push *). ¿Se ejecuta el push?",
+          "opcoes": [
+            "Sí, manda el hook",
+            "No: el deny de las reglas vale aunque el hook diga allow",
+            "Solo en bypassPermissions",
+            "Pregunta"
+          ],
+          "certa": 1,
+          "explica": "La doc dice que las decisiones de PreToolUse no pasan por encima de las reglas de deny y ask. Las capas se suman.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "¿Por qué la guardia protege su propia carpeta y el .claude/?",
+          "opcoes": [
+            "Para ahorrar disco",
+            "Para que el agente no apague la guardia editando el settings o el hook",
+            "Porque la doc lo exige",
+            "Para ir más rápido"
+          ],
+          "certa": 1,
+          "explica": "Una guardia al alcance del agente es una guardia que él puede quitar. Mismo principio del juez fuera de su alcance en el curso 1.",
+          "ref": "passos"
+        },
+        {
+          "p": "¿Por qué find . -delete necesita un hook y no basta con deny Bash(rm *)?",
+          "opcoes": [
+            "Porque find es lento",
+            "Porque la regla coincide con el texto rm y find no empieza con rm",
+            "Porque el deny no vale para find",
+            "No hace falta"
+          ],
+          "certa": 1,
+          "explica": "El hook mira el comando completo con el patrón que elijas (y puede mirar el disco). La regla de Bash coincide por el comienzo del texto.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "En tres frases",
+      "itens": [
+        {
+          "t": "El hook ejecuta código",
+          "texto": "Antes de cada herramienta, puede negar, preguntar o dejar seguir."
+        },
+        {
+          "t": "Prueba por JSON",
+          "texto": "Llamada falsa en stdin, decisión en stdout: sin modelo, sin cuota."
+        },
+        {
+          "t": "Protege la guardia",
+          "texto": "Juez, objetivo, settings y el propio hook fuera del alcance de edición."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir más allá",
+      "links": [
+        {
+          "t": "Claude Code: Hooks reference (doc oficial)",
+          "href": "https://code.claude.com/docs/en/hooks",
+          "icone": "lupa"
+        },
+        {
+          "t": "inema-agent-runtime: receta R7, guardia y panel",
+          "href": "https://github.com/inematds/inema-agent-runtime/blob/main/runtime/receitas/R7-guarda-e-painel.md",
+          "icone": "escudo"
+        },
+        {
+          "t": "Curso 3, Multiagente: aislamiento y colisión entre sesiones",
+          "href": "https://inematds.github.io/loop-r-eng-multiagente-v72/",
+          "icone": "robo"
+        },
+        {
+          "t": "kit/hooks/guarda.py",
+          "href": "https://github.com/inematds/loop-r-eng-seguranca-v72/blob/main/kit/hooks/guarda.py",
+          "icone": "arquivo"
+        }
+      ]
+    }
+  ]
+}
