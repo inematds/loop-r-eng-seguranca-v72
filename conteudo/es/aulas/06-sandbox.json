@@ -183,12 +183,12 @@
         {
           "p": "systemd aceptó PrivateNetwork=yes sin error. ¿La red está cortada?",
           "opcoes": [
-            "Sí, la flag fue aceptada",
-            "Solo la prueba lo dice: aquí corrió sin la traba y la red pasó",
             "Solo si eres root",
-            "Sí, si el servicio es oneshot"
+            "Sí, siempre que el servicio sea oneshot y corra como usuario común",
+            "Solo la prueba lo dice: aquí corrió sin la traba y la red pasó",
+            "Sí, la flag fue aceptada"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "El systemd del usuario siguió sin el namespace y solo lo registró en el journal. Una flag aceptada no es una traba en pie: el intento de fuga es lo que decide.",
           "ref": "codigo",
           "cert": true
@@ -197,11 +197,11 @@
           "p": "¿Qué hace Claude Code, por defecto, si el sandbox no logra arrancar?",
           "opcoes": [
             "Se niega a iniciar",
+            "Corre solo lectura",
             "Corre los comandos sin sandbox",
-            "Pide la contraseña",
-            "Corre solo lectura"
+            "Pide la contraseña"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Por defecto sigue sin sandbox. sandbox.failIfUnavailable: true hace que se niegue a iniciar, que es lo que un loop sin supervisión necesita.",
           "ref": "passos",
           "cert": true
@@ -209,24 +209,24 @@
         {
           "p": "En el perfil :workspace, el agente logra leer un secreto en ~/.config. ¿Qué hacer?",
           "opcoes": [
+            "Cambiar a danger-full-access y confiar en el deny de lectura del settings",
             "Nada, leer no hace daño",
-            "Cortar la red y sacar los secretos del alcance de la sesión",
-            "Cambiar a danger-full-access",
-            "Apagar el sandbox"
+            "Apagar el sandbox",
+            "Cortar la red y sacar los secretos del alcance de la sesión"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Leer no filtra si no hay salida. Con la red cortada por el mismo sandbox y el secreto fuera de alcance, la tríada no se cierra.",
           "ref": "diagrama"
         },
         {
           "p": "¿Cuál es la diferencia entre el sandbox y la regla deny de la clase 4?",
           "opcoes": [
-            "Ninguna",
-            "La regla compara el texto del comando; el sandbox es el sistema operativo bloqueando el proceso, sea cual sea el texto",
+            "La regla coincide con el texto; el sandbox es el sistema bloqueando el proceso",
             "El sandbox es más lento",
-            "La regla vale solo en Codex"
+            "La regla vale para cualquier comando; el sandbox solo bloquea lo que ejecuta Codex",
+            "Ninguna"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "find -delete, python3 -c o un script que borra pasan por una regla de texto; no pasan por un sistema de archivos de solo lectura.",
           "ref": "passos"
         }

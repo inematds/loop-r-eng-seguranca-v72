@@ -222,12 +222,12 @@
         {
           "p": "El hook respondió allow, pero el settings tiene deny Bash(git push *). ¿Se ejecuta el push?",
           "opcoes": [
-            "Sí, manda el hook",
-            "No: el deny de las reglas vale aunque el hook diga allow",
             "Solo en bypassPermissions",
-            "Pregunta"
+            "Pregunta",
+            "No: el deny de las reglas vale aunque el hook diga allow",
+            "Sí: la decisión del hook tiene prioridad sobre las reglas del settings"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "La doc dice que las decisiones de PreToolUse no pasan por encima de las reglas de deny y ask. Las capas se suman.",
           "ref": "diagrama",
           "cert": true
@@ -235,12 +235,12 @@
         {
           "p": "¿Por qué la guardia protege su propia carpeta y el .claude/?",
           "opcoes": [
+            "Para ir más rápido",
+            "Porque la documentación de Claude Code exige proteger la carpeta del hook y el .claude/",
             "Para ahorrar disco",
-            "Para que el agente no apague la guardia editando el settings o el hook",
-            "Porque la doc lo exige",
-            "Para ir más rápido"
+            "Para que el agente no apague la guardia editando el settings o el hook"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Una guardia al alcance del agente es una guardia que él puede quitar. Es el mismo principio del juez fuera de alcance del curso 1. La guardia solo lee el comando: un python3 -c que escribe todavía pasa, y por eso viene con el deny Edit(...) de la clase 4 y el sandbox de la clase 6.",
           "ref": "passos"
         },
@@ -249,8 +249,8 @@
           "opcoes": [
             "Porque find es lento",
             "Porque la regla coincide con el texto rm y find no empieza con rm",
-            "Porque el deny no vale para find",
-            "No hace falta"
+            "No hace falta",
+            "Porque deny de Bash solo se aplica a comandos de borrar, y find es de búsqueda"
           ],
           "certa": 1,
           "explica": "El hook mira el comando completo con el patrón que elijas (y puede mirar el disco). La regla de Bash coincide por el comienzo del texto.",

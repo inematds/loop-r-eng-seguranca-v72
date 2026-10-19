@@ -237,10 +237,10 @@
         {
           "p": "Where does indirect injection come from?",
           "opcoes": [
-            "From the user typing in the chat",
+            "From the operating system",
             "From the content the agent reads: a page, an issue, an email",
             "From the model, on its own",
-            "From the operating system"
+            "From the user who types into the chat a request disguised as a task"
           ],
           "certa": 1,
           "explica": "Whoever wrote the content never talked to the agent. The agent only has to read their text.",
@@ -250,12 +250,12 @@
         {
           "p": "In sem-saida mode, why did the canary still leak?",
           "opcoes": [
+            "The network was on",
             "A script bug",
-            "The reply is a channel too: a markdown image with the secret in the URL",
             "The model was weak",
-            "The network was on"
+            "The reply is a channel too: a markdown image with the secret in the URL"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Cutting the tool doesn't cut the response. If someone renders the markdown, the image carries the secret. Don't automatically render images in responses, or separate the reader.",
           "ref": "codigo",
           "cert": true
@@ -263,24 +263,24 @@
         {
           "p": "The real model didn't follow the hidden instruction in this run. Conclusion?",
           "opcoes": [
-            "You can drop the separation",
+            "The canary can go: the model has already proven it resists this attack",
+            "Always use this model",
             "One run doesn't prove the next one; the defense stays structural",
-            "The canary is unnecessary",
-            "Always use this model"
+            "You can drop the separation"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Resisting once is a sample of size one. The separation holds even against the fake agent that always obeys.",
           "ref": "codigo"
         },
         {
           "p": "In separado mode, what does the agent that holds the secret receive?",
           "opcoes": [
+            "Only the fields extracted by code (title and price)",
             "The whole page",
             "The page without the hidden parts",
-            "Only the fields extracted by code (title and price)",
-            "A summary written by another model"
+            "A summary of the page made by another model, with no access to the secret"
           ],
-          "certa": 2,
+          "certa": 0,
           "explica": "A summary by another model still carries free text. Fields extracted by code don't carry instructions.",
           "ref": "codigo"
         }

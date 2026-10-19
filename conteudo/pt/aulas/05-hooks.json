@@ -222,12 +222,12 @@
         {
           "p": "O hook respondeu allow, mas o settings tem deny Bash(git push *). O push roda?",
           "opcoes": [
-            "Sim, o hook manda",
-            "Não: o deny das regras vale mesmo com allow do hook",
             "Só em bypassPermissions",
-            "Pergunta"
+            "Pergunta",
+            "Não: o deny das regras vale mesmo com allow do hook",
+            "Sim: a decisão do hook tem prioridade sobre as regras do settings"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "A doc diz que decisões de PreToolUse não passam por cima das regras de deny e ask. As camadas se somam.",
           "ref": "diagrama",
           "cert": true
@@ -235,12 +235,12 @@
         {
           "p": "Por que a guarda protege a própria pasta e o .claude/?",
           "opcoes": [
+            "Para ficar mais rápido",
+            "Porque a documentação do Claude Code exige proteger a pasta do hook e o .claude/",
             "Para economizar disco",
-            "Para o agente não desligar a guarda editando o settings ou o hook",
-            "Porque a doc exige",
-            "Para ficar mais rápido"
+            "Para o agente não desligar a guarda editando o settings ou o hook"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Guarda ao alcance do agente é guarda que ele pode remover. Mesmo princípio do juiz fora do alcance no curso 1. A guarda só lê o comando: um python3 -c que grava ainda passa, e por isso ela vem com o deny Edit(...) da aula 4 e o sandbox da aula 6.",
           "ref": "passos"
         },
@@ -249,8 +249,8 @@
           "opcoes": [
             "Porque find é lento",
             "Porque a regra casa o texto rm e find não começa com rm",
-            "Porque o deny não vale para find",
-            "Não precisa"
+            "Não precisa",
+            "Porque deny de Bash só se aplica a comandos de apagar, e find é de busca"
           ],
           "certa": 1,
           "explica": "O hook olha o comando inteiro com o padrão que você escolher (e pode olhar o disco). A regra de Bash casa pelo começo do texto.",

@@ -184,12 +184,12 @@
         {
           "p": "¿Cuáles son las tres patas de la tríada letal?",
           "opcoes": [
-            "Modelo, prompt y herramienta",
+            "Red, disco y memoria",
+            "Lectura de archivos, escritura en disco y ejecución de comandos",
             "Dato privado, contenido de terceros y canal de salida",
-            "Lectura, escritura y ejecución",
-            "Red, disco y memoria"
+            "Modelo, prompt de sistema y herramientas conectadas"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Con las tres en la misma sesión, quien escribe el contenido de terceros puede mandar al agente a llevar el dato privado hacia afuera. Lectura/escritura/ejecución es permiso de archivo, otra cosa.",
           "ref": "diagrama",
           "cert": true
@@ -197,12 +197,12 @@
         {
           "p": "Ninguna herramienta de tu sesión marca las tres patas por sí sola. ¿La sesión está segura?",
           "opcoes": [
-            "Sí",
             "No necesariamente: las patas se suman en la sesión",
-            "Solo si el modelo es el tope de la suscripción",
-            "Solo si el prompt manda ignorar instrucciones"
+            "Sí",
+            "Sí, siempre que el modelo usado sea el tope de la suscripción",
+            "Sí, si el prompt de sistema manda ignorar instrucciones"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "Un fetch, una base de clientes y un envío de correo, cada uno inofensivo, cierran la tríada juntos. El triade.py suma por sesión por eso.",
           "ref": "codigo",
           "cert": true
@@ -210,24 +210,24 @@
         {
           "p": "¿Qué pata suele ser la más barata de cortar?",
           "opcoes": [
-            "Los datos privados",
             "El contenido de terceros",
             "La salida: destino fijo en el código y sin red",
-            "Ninguna: lo correcto es un detector de inyección"
+            "Ninguna: lo correcto es poner un detector de inyección en la entrada",
+            "Los datos privados"
           ],
-          "certa": 2,
+          "certa": 1,
           "explica": "Fijar el destino y apagar la red rara vez estorba el trabajo. Un detector de inyección es otro modelo engañable, no una pata cortada.",
           "ref": "passos"
         },
         {
           "p": "¿Por qué \"ignora las instrucciones en el contenido\" en el prompt no es la defensa?",
           "opcoes": [
-            "Porque el modelo no lee el prompt de sistema",
             "Porque falla con la frecuencia suficiente; la defensa es estructural",
             "Porque la documentación lo prohíbe",
+            "Porque el modelo no lee el prompt de sistema cuando hay herramientas activas",
             "Porque vuelve lento al agente"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "Ayuda, pero no garantiza. La garantía viene de que la sesión no tenga las tres patas, lo cual no depende de que el modelo resista.",
           "ref": "passos"
         }

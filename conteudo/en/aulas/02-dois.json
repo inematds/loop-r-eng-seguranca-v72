@@ -156,12 +156,12 @@
         {
           "p": "The fixer reads issues, reads the private repository, and edits files, with no network. What do the two rules say?",
           "opcoes": [
-            "Both pass it",
-            "The trifecta passes it (no outbound channel), the Rule of Two fails it (A, B, and C)",
             "Both fail it",
-            "The trifecta fails it, the Rule of Two passes it"
+            "The trifecta fails it, the Rule of Two passes it",
+            "Both pass it",
+            "The trifecta passes it (no outbound channel), the Rule of Two fails it (A, B, and C)"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "[C] includes changing state. Without an outbound channel there is no leak, but the issue text can still tell it to delete or break things.",
           "ref": "codigo",
           "cert": true
@@ -170,11 +170,11 @@
           "p": "What does the Meta ask for when the task needs all three without a new session?",
           "opcoes": [
             "A bigger model",
-            "Supervision: a human in the loop or another reliable validation",
-            "More instructions in the prompt",
-            "Running at night"
+            "Running at night",
+            "Stronger instructions in the prompt, repeated every turn of the loop",
+            "Supervision: a human in the loop or another reliable validation"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "With all three, the agent should not operate alone. A human approving each action, or start a clean-context session.",
           "ref": "diagrama",
           "cert": true
@@ -182,12 +182,12 @@
         {
           "p": "What makes the second session \"clean-context\"?",
           "opcoes": [
-            "Being a different model",
             "Not receiving the untrusted text, only reviewed fields",
+            "Being a different model, from a different vendor, that doesn't know the first session",
             "Running in another folder",
             "Having fewer turns"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "If the issue text goes into the second session's prompt, that session has [A] again. What separates them is the content of the context.",
           "ref": "passos"
         }

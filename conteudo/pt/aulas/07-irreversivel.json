@@ -246,10 +246,10 @@
         {
           "p": "Por que a aprovação guarda o hash do conteúdo?",
           "opcoes": [
-            "Para ficar mais rápido",
+            "Por exigência do Git",
             "Para recusar se o conteúdo mudar depois de aprovado",
-            "Para criptografar o envio",
-            "Por exigência do Git"
+            "Para criptografar o conteúdo antes do envio ao destino externo",
+            "Para ficar mais rápido"
           ],
           "certa": 1,
           "explica": "Você aprova o que leu. Se alguém (ou o agente) muda o texto depois, o executar recusa: \"o conteúdo mudou depois da aprovação\".",
@@ -259,10 +259,10 @@
         {
           "p": "O tty exigido no aprovar é a fronteira de segurança?",
           "opcoes": [
-            "Sim, o agente nunca tem tty",
-            "Não: é lombada; a fronteira é PORTA_DIR fora do alcance de escrita do agente",
-            "Sim, se for Linux",
-            "Não existe fronteira"
+            "Sim: o agente roda sem terminal e nunca consegue abrir um tty interativo",
+            "Não: é lombada; a fronteira é PORTA_DIR fora do alcance do agente",
+            "Não existe fronteira",
+            "Sim, se for Linux"
           ],
           "certa": 1,
           "explica": "Um pseudo-terminal finge um tty (o ensaio usa script). O que segura é o agente não conseguir escrever a aprovação, porque a pasta está fora do sandbox dele.",
@@ -272,24 +272,24 @@
         {
           "p": "O loop vai para o systemd. O que precisa ir junto?",
           "opcoes": [
-            "As suas chaves, para não falhar",
-            "Teto de tempo e memória, sandbox provado e a porta",
+            "Nada: fora do terminal o agente não tem a sua sessão nem os seus atalhos",
             "Só o PATH",
-            "Nada: fora do terminal é mais seguro"
+            "Teto de tempo e memória, sandbox provado e a porta",
+            "As suas chaves, para não falhar"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Fora do terminal você não está olhando. O raio de dano tem de caber no teto, no sandbox e na porta, não na sua sessão.",
           "ref": "codigo"
         },
         {
           "p": "Num Type=oneshot, qual teto de tempo o systemd respeita?",
           "opcoes": [
-            "RuntimeMaxSec",
             "TimeoutStartSec (e o timeout na linha do comando)",
             "MemoryMax",
+            "RuntimeMaxSec",
             "Nenhum"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "O systemd-analyze avisa que RuntimeMaxSec é ignorado em oneshot. MemoryMax é teto de memória, não de tempo.",
           "ref": "codigo"
         }

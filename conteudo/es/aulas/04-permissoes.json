@@ -216,12 +216,12 @@
         {
           "p": "Tienes deny Bash(git push *) y allow Bash(git push origin feature *). ¿Qué pasa con git push origin feature-x?",
           "opcoes": [
-            "Pasa, el allow es más específico",
             "Se niega: deny va primero y allow no abre excepción",
-            "Pregunta",
-            "Depende del modo"
+            "Depende del modo",
+            "Pasa, el allow es más específico",
+            "Pregunta"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "La doc es explícita: el orden es deny, ask, allow, y la especificidad no cambia eso.",
           "ref": "diagrama",
           "cert": true
@@ -229,12 +229,12 @@
         {
           "p": "¿Por qué Bash(rm -rf *) no bloquea rm -r -f build?",
           "opcoes": [
-            "Porque Claude Code ignora el deny de rm",
-            "Porque la regla compara texto, y el texto es otro",
+            "Porque el * de la regla no coincide con espacios ni con las flags separadas",
             "Porque falta sudo",
-            "Porque el * no coincide con espacio"
+            "Porque Claude Code ignora el deny de rm",
+            "Porque la regla compara texto, y el texto es otro"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "La regla de Bash compara el texto del comando. Bash(rm *) cubre las dos formas; lo que no empieza con rm (find -delete, scripts) queda para hook y sandbox.",
           "ref": "codigo",
           "cert": true
@@ -242,10 +242,10 @@
         {
           "p": "¿Qué -s de Codex para la etapa que edita el proyecto sin red?",
           "opcoes": [
-            "danger-full-access",
+            "--yolo",
             "read-only",
             "workspace-write",
-            "--yolo"
+            "danger-full-access"
           ],
           "certa": 2,
           "explica": "workspace-write escribe solo en el workspace y, por defecto, sin red. La doc de Codex reserva el bypass (--yolo) para un runner ya aislado.",
@@ -256,8 +256,8 @@
           "opcoes": [
             "se ejecuta",
             "es rechazado: dontAsk niega lo que pediría confirmación",
-            "se queda esperando",
-            "se vuelve allow"
+            "se vuelve allow",
+            "se queda esperando"
           ],
           "certa": 1,
           "explica": "Según la doc, dontAsk rechaza toda llamada que pediría confirmación y deja correr lo que el allow libera. Por eso el allow de la etapa lista lo que ella usa.",

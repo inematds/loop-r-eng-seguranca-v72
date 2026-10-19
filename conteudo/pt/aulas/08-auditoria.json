@@ -237,12 +237,12 @@
         {
           "p": "O auditar.py aprovou o seu mapa. O loop está seguro?",
           "opcoes": [
+            "Só com o modelo topo",
             "Sim, o script garante",
-            "Só se o mapa for verdadeiro: cada controle precisa da prova das aulas 4 a 7",
-            "Só se rodar todo dia",
-            "Só com o modelo topo"
+            "Sim, desde que o auditar.py rode todo dia no cron e reprove qualquer mudança",
+            "Só se o mapa for verdadeiro: cada controle precisa da prova das aulas 4 a 7"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "O script confere o mapa, não a máquina. Mapa otimista aprova loop aberto.",
           "ref": "codigo",
           "cert": true
@@ -250,10 +250,10 @@
         {
           "p": "Qual a ordem do curso para fechar um loop?",
           "opcoes": [
-            "Sandbox, depois mapa",
-            "Mapear as sessões, separar o leitor, travar (permissão, hook, sandbox) e pôr a porta",
-            "Porta primeiro, o resto depois",
-            "Tanto faz"
+            "Porta primeiro, porque ela já segura toda ação irreversível; mapa e travas depois",
+            "Mapear sessões, separar o leitor, travar (permissão, hook, sandbox), pôr a porta",
+            "Tanto faz",
+            "Sandbox, depois mapa"
           ],
           "certa": 1,
           "explica": "Sem o mapa, você trava a sessão errada. As travas vêm depois de saber o que cada sessão junta.",
@@ -264,23 +264,23 @@
           "p": "Quando reauditar?",
           "opcoes": [
             "Nunca, se aprovou",
-            "A cada ferramenta ou MCP novo, máquina nova ou versão nova do Claude Code ou do Codex",
-            "Só depois de um incidente",
-            "Uma vez por ano"
+            "Uma vez por ano",
+            "A cada ferramenta ou MCP novo, máquina nova ou nova versão do agente",
+            "Só depois de um incidente, quando o log mostrar uma ação fora do esperado"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Uma ferramenta nova pode trazer uma perna; uma máquina nova pode não ter a trava que a anterior tinha (aula 6).",
           "ref": "diagrama"
         },
         {
           "p": "Uma sessão junta A, B e C, e não dá para dividir. O que o mapa precisa dizer?",
           "opcoes": [
-            "Nada",
             "\"humano\": true, com a porta em cada ação de saída",
             "\"rede\": true",
+            "Nada",
             "\"nova_sessao\": true"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "Com as três, a sessão não é autônoma: supervisão em cada ação, como pede a Regra de Dois.",
           "ref": "codigo"
         }

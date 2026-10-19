@@ -216,12 +216,12 @@
         {
           "p": "Você tem deny Bash(git push *) e allow Bash(git push origin feature *). O que acontece com git push origin feature-x?",
           "opcoes": [
-            "Passa, o allow é mais específico",
             "É negado: deny vem antes e allow não abre exceção",
-            "Pergunta",
-            "Depende do modo"
+            "Depende do modo",
+            "Passa, o allow é mais específico",
+            "Pergunta"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "A doc é explícita: a ordem é deny, ask, allow, e a especificidade não muda isso.",
           "ref": "diagrama",
           "cert": true
@@ -229,12 +229,12 @@
         {
           "p": "Por que Bash(rm -rf *) não barra rm -r -f build?",
           "opcoes": [
-            "Porque o Claude Code ignora deny de rm",
-            "Porque a regra casa texto, e o texto é outro",
+            "Porque o * da regra não casa espaço nem as flags separadas",
             "Porque falta sudo",
-            "Porque o * não casa espaço"
+            "Porque o Claude Code ignora deny de rm",
+            "Porque a regra casa texto, e o texto é outro"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Regra de Bash compara o texto do comando. Bash(rm *) casa as duas formas; o que não começa com rm (find -delete, scripts) fica para hook e sandbox.",
           "ref": "codigo",
           "cert": true
@@ -242,10 +242,10 @@
         {
           "p": "Qual -s do Codex para a etapa que edita o projeto sem rede?",
           "opcoes": [
-            "danger-full-access",
+            "--yolo",
             "read-only",
             "workspace-write",
-            "--yolo"
+            "danger-full-access"
           ],
           "certa": 2,
           "explica": "workspace-write escreve só no workspace e, por padrão, sem rede. A doc do Codex reserva o bypass (--yolo) para runner já isolado.",
@@ -256,8 +256,8 @@
           "opcoes": [
             "roda",
             "é recusado: dontAsk nega o que pediria confirmação",
-            "trava esperando",
-            "vira allow"
+            "vira allow",
+            "trava esperando"
           ],
           "certa": 1,
           "explica": "Pela doc, dontAsk recusa toda chamada que pediria confirmação e deixa rodar o que o allow libera. Por isso o allow da etapa lista o que ela usa.",

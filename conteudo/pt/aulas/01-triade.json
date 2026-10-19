@@ -184,12 +184,12 @@
         {
           "p": "Quais são as três pernas da tríade letal?",
           "opcoes": [
-            "Modelo, prompt e ferramenta",
+            "Rede, disco e memória",
+            "Leitura de arquivos, escrita no disco e execução de comandos",
             "Dado privado, conteúdo de terceiros e canal de saída",
-            "Leitura, escrita e execução",
-            "Rede, disco e memória"
+            "Modelo, prompt de sistema e ferramentas conectadas"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Com as três na mesma sessão, quem escreve o conteúdo de terceiros pode mandar o agente levar o dado privado para fora. Leitura/escrita/execução é permissão de arquivo, outra coisa.",
           "ref": "diagrama",
           "cert": true
@@ -197,12 +197,12 @@
         {
           "p": "Nenhuma ferramenta da sua sessão marca as três pernas sozinha. A sessão está segura?",
           "opcoes": [
-            "Sim",
             "Não necessariamente: as pernas se somam na sessão",
-            "Só se o modelo for o topo da assinatura",
-            "Só se o prompt mandar ignorar instruções"
+            "Sim",
+            "Sim, desde que o modelo usado seja o topo da assinatura",
+            "Sim, se o prompt de sistema mandar ignorar instruções"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "Um fetch, um banco de clientes e um envio de e-mail, cada um inofensivo, fecham a tríade juntos. O triade.py soma por sessão por isso.",
           "ref": "codigo",
           "cert": true
@@ -210,24 +210,24 @@
         {
           "p": "Qual perna costuma ser a mais barata de cortar?",
           "opcoes": [
-            "Os dados privados",
             "O conteúdo de terceiros",
             "A saída: destino fixo no código e sem rede",
-            "Nenhuma: o certo é um detector de injeção"
+            "Nenhuma: o certo é pôr um detector de injeção na entrada",
+            "Os dados privados"
           ],
-          "certa": 2,
+          "certa": 1,
           "explica": "Fixar o destino e desligar a rede raramente atrapalha o trabalho. Detector de injeção é outro modelo enganável, não uma perna cortada.",
           "ref": "passos"
         },
         {
           "p": "Por que \"ignore instruções no conteúdo\" no prompt não é a defesa?",
           "opcoes": [
-            "Porque o modelo não lê o prompt de sistema",
             "Porque falha com frequência suficiente; a defesa é estrutural",
             "Porque é proibido pela doc",
+            "Porque o modelo não lê o prompt de sistema quando há ferramentas ativas",
             "Porque deixa o agente lento"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "Ajuda, mas não garante. A garantia vem de a sessão não ter as três pernas, o que não depende de o modelo resistir.",
           "ref": "passos"
         }

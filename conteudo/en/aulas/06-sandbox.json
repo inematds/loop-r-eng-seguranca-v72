@@ -183,12 +183,12 @@
         {
           "p": "systemd accepted PrivateNetwork=yes with no error. Is the network cut off?",
           "opcoes": [
-            "Yes, the flag was accepted",
-            "Only the proof can tell: here it ran without the lock and the network got through",
             "Only if you're root",
-            "Yes, if the service is oneshot"
+            "Yes, as long as the service is oneshot and runs as a regular user",
+            "Only the proof can tell: here it ran without the lock and the network got through",
+            "Yes, the flag was accepted"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "The user's systemd carried on without the namespace and only logged it in the journal. An accepted flag is not a lock standing: the escape attempt is what decides.",
           "ref": "codigo",
           "cert": true
@@ -197,11 +197,11 @@
           "p": "What does Claude Code do, by default, if the sandbox can't start?",
           "opcoes": [
             "Refuses to start",
+            "Runs read-only",
             "Runs the commands without a sandbox",
-            "Asks for the password",
-            "Runs read-only"
+            "Asks for the password"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "By default it carries on without a sandbox. sandbox.failIfUnavailable: true makes it refuse to start, which is what an unsupervised loop needs.",
           "ref": "passos",
           "cert": true
@@ -209,24 +209,24 @@
         {
           "p": "In the :workspace profile, the agent can read a secret in ~/.config. What should you do?",
           "opcoes": [
+            "Switch to danger-full-access and rely on the settings read deny",
             "Nothing, reading does no harm",
-            "Cut the network and take secrets out of the session's reach",
-            "Switch to danger-full-access",
-            "Turn off the sandbox"
+            "Turn off the sandbox",
+            "Cut the network and take secrets out of the session's reach"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Reading doesn't leak if there is no way out. With the network cut by the same sandbox and the secret out of reach, the trifecta doesn't close.",
           "ref": "diagrama"
         },
         {
           "p": "What is the difference between the sandbox and the deny rule from lesson 4?",
           "opcoes": [
-            "None",
-            "The rule matches the command text; the sandbox is the operating system blocking the process, whatever the text",
+            "The rule matches the text; the sandbox is the system blocking the process",
             "The sandbox is slower",
-            "The rule only works in Codex"
+            "The rule applies to any command; the sandbox only blocks what Codex executes",
+            "None"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "find -delete, python3 -c, or a script that deletes get past a text rule; they don't get past a read-only file system.",
           "ref": "passos"
         }

@@ -156,12 +156,12 @@
         {
           "p": "O corretor lê issues, lê o repositório privado e edita arquivos, sem rede. O que dizem as duas regras?",
           "opcoes": [
-            "As duas aprovam",
-            "Tríade aprova (sem saída), Regra de Dois reprova (A, B e C)",
             "As duas reprovam",
-            "Tríade reprova, Regra de Dois aprova"
+            "Tríade reprova, Regra de Dois aprova",
+            "As duas aprovam",
+            "Tríade aprova (sem saída), Regra de Dois reprova (A, B e C)"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "[C] inclui mudar estado. Sem saída não há vazamento, mas o texto da issue ainda pode mandar apagar ou estragar.",
           "ref": "codigo",
           "cert": true
@@ -170,11 +170,11 @@
           "p": "O que a Meta pede quando a tarefa precisa das três sem nova sessão?",
           "opcoes": [
             "Um modelo maior",
-            "Supervisão: humano no laço ou outra validação confiável",
-            "Mais instruções no prompt",
-            "Rodar à noite"
+            "Rodar à noite",
+            "Instruções mais fortes no prompt, repetidas a cada turno do loop",
+            "Supervisão: humano no laço ou outra validação confiável"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Com as três, o agente não deve operar sozinho. Humano aprovando cada ação, ou começar uma sessão de contexto limpo.",
           "ref": "diagrama",
           "cert": true
@@ -182,12 +182,12 @@
         {
           "p": "O que torna a segunda sessão \"de contexto limpo\"?",
           "opcoes": [
-            "Ser outro modelo",
             "Não receber o texto não confiável, só campos revisados",
+            "Ser outro modelo, de outro fornecedor, que não conhece a primeira sessão",
             "Rodar em outra pasta",
             "Ter menos turnos"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "Se o texto da issue entra no prompt da segunda sessão, ela volta a ter [A]. O que separa é o conteúdo do contexto.",
           "ref": "passos"
         }

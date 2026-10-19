@@ -237,10 +237,10 @@
         {
           "p": "¿De dónde viene la inyección indirecta?",
           "opcoes": [
-            "Del usuario que escribe en el chat",
+            "Del sistema operativo",
             "Del contenido que el agente lee: página, issue, correo",
             "Del modelo, por sí solo",
-            "Del sistema operativo"
+            "Del usuario que escribe en el chat un pedido disfrazado de tarea"
           ],
           "certa": 1,
           "explica": "Quien escribió el contenido nunca habló con el agente. Basta con que el agente lea su texto.",
@@ -250,12 +250,12 @@
         {
           "p": "En el modo sem-saida, ¿por qué el canario se filtró de todos modos?",
           "opcoes": [
+            "La red estaba conectada",
             "Un bug del script",
-            "La respuesta también es un canal: imagen markdown con el secreto en la URL",
             "El modelo era débil",
-            "La red estaba conectada"
+            "La respuesta también es un canal: imagen markdown con el secreto en la URL"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Cortar la herramienta no corta la respuesta. Si alguien renderiza el markdown, la imagen lleva el secreto. No renderices imágenes de la respuesta automáticamente, o separa al lector.",
           "ref": "codigo",
           "cert": true
@@ -263,24 +263,24 @@
         {
           "p": "El modelo real no siguió la instrucción oculta en esta ronda. ¿Conclusión?",
           "opcoes": [
-            "Se puede quitar la separación",
-            "Una ronda no prueba la siguiente; la defensa sigue siendo estructural",
-            "El canario es innecesario",
-            "Usa siempre ese modelo"
+            "El canario puede salir: el modelo ya probó que resiste ese ataque",
+            "Usa siempre ese modelo",
+            "Una ronda no prueba la próxima; la defensa es estructural",
+            "Se puede quitar la separación"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Resistir una vez es una muestra de tamaño uno. La separación protege incluso frente al agente falso que obedece siempre.",
           "ref": "codigo"
         },
         {
           "p": "En el modo separado, ¿qué recibe el agente que tiene el secreto?",
           "opcoes": [
+            "Solo los campos extraídos por código (título y precio)",
             "La página completa",
             "La página sin las partes ocultas",
-            "Solo los campos extraídos por código (título y precio)",
-            "Un resumen hecho por otro modelo"
+            "Un resumen de la página hecho por otro modelo, sin acceso al secreto"
           ],
-          "certa": 2,
+          "certa": 0,
           "explica": "Un resumen hecho por otro modelo todavía lleva texto libre. Los campos extraídos por código no llevan instrucciones.",
           "ref": "codigo"
         }

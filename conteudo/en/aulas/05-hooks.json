@@ -222,12 +222,12 @@
         {
           "p": "The hook answered allow, but settings has deny Bash(git push *). Does the push run?",
           "opcoes": [
-            "Yes, the hook rules",
-            "No: the deny in the rules holds even with the hook's allow",
             "Only in bypassPermissions",
-            "Question"
+            "Question",
+            "No: the deny in the rules holds even with the hook's allow",
+            "Yes: the hook's decision takes priority over the settings rules"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "The docs say PreToolUse decisions don't override deny and ask rules. The layers add up.",
           "ref": "diagrama",
           "cert": true
@@ -235,12 +235,12 @@
         {
           "p": "Why does the guard protect its own folder and .claude/?",
           "opcoes": [
+            "To be faster",
+            "Because the Claude Code documentation requires protecting the hook folder and .claude/",
             "To save disk space",
-            "So the agent can't turn off the guard by editing settings or the hook",
-            "Because the docs require it",
-            "To be faster"
+            "So the agent can't turn off the guard by editing settings or the hook"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "A guard within the agent's reach is a guard it can remove. Same principle as the judge out of reach in course 1. The guard only reads the command: a python3 -c that writes still gets through, and that's why it comes with the deny Edit(...) from lesson 4 and the sandbox from lesson 6.",
           "ref": "passos"
         },
@@ -249,8 +249,8 @@
           "opcoes": [
             "Because find is slow",
             "Because the rule matches the text rm and find doesn't start with rm",
-            "Because deny doesn't apply to find",
-            "Not needed"
+            "Not needed",
+            "Because Bash deny only applies to delete commands, and find is a search command"
           ],
           "certa": 1,
           "explica": "The hook looks at the whole command with the pattern you choose (and can look at the disk). The Bash rule matches only the start of the text.",

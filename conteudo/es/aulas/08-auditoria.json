@@ -237,12 +237,12 @@
         {
           "p": "auditar.py aprobó tu mapa. ¿El loop está seguro?",
           "opcoes": [
+            "Solo con el modelo tope",
             "Sí, el script lo garantiza",
-            "Solo si el mapa es verdadero: cada control necesita la prueba de las clases 4 a 7",
-            "Solo si se ejecuta todos los días",
-            "Solo con el modelo tope"
+            "Sí, siempre que auditar.py corra todos los días en el cron y repruebe cualquier cambio",
+            "Solo si el mapa es verdadero: cada control necesita la prueba de las clases 4 a 7"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "El script revisa el mapa, no la máquina. Un mapa optimista aprueba un loop abierto.",
           "ref": "codigo",
           "cert": true
@@ -250,10 +250,10 @@
         {
           "p": "¿Cuál es el orden del curso para cerrar un loop?",
           "opcoes": [
-            "Sandbox, después mapa",
-            "Mapear las sesiones, separar al lector, bloquear (permiso, hook, sandbox) y poner la compuerta",
-            "Compuerta primero, lo demás después",
-            "Da igual"
+            "Compuerta primero, porque ya contiene toda acción irreversible; mapa y bloqueos después",
+            "Mapear sesiones, separar al lector, bloquear (permiso, hook, sandbox), poner la compuerta",
+            "Da igual",
+            "Sandbox, después mapa"
           ],
           "certa": 1,
           "explica": "Sin el mapa, bloqueas la sesión equivocada. Los bloqueos vienen después de saber qué junta cada sesión.",
@@ -264,23 +264,23 @@
           "p": "¿Cuándo volver a auditar?",
           "opcoes": [
             "Nunca, si aprobó",
-            "Con cada herramienta o MCP nuevo, máquina nueva o versión nueva de Claude Code o de Codex",
-            "Solo después de un incidente",
-            "Una vez al año"
+            "Una vez al año",
+            "Con cada herramienta o MCP nuevo, máquina nueva o nueva versión del agente",
+            "Solo después de un incidente, cuando el log muestre una acción fuera de lo esperado"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Una herramienta nueva puede traer una pata; una máquina nueva puede no tener el bloqueo que tenía la anterior (clase 6).",
           "ref": "diagrama"
         },
         {
           "p": "Una sesión junta A, B y C, y no se puede dividir. ¿Qué debe decir el mapa?",
           "opcoes": [
-            "Nada",
             "\"humano\": true, con la compuerta en cada acción de salida",
             "\"rede\": true",
+            "Nada",
             "\"nova_sessao\": true"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "Con las tres, la sesión no es autónoma: supervisión en cada acción, como pide la Regla de Dos.",
           "ref": "codigo"
         }

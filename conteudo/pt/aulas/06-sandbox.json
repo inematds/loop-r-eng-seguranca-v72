@@ -183,12 +183,12 @@
         {
           "p": "O systemd aceitou PrivateNetwork=yes sem erro. A rede está cortada?",
           "opcoes": [
-            "Sim, a flag foi aceita",
-            "Só a prova diz: aqui ela rodou sem a trava e a rede passou",
             "Só se for root",
-            "Sim, se o serviço for oneshot"
+            "Sim, desde que o serviço seja oneshot e rode como usuário comum",
+            "Só a prova diz: aqui ela rodou sem a trava e a rede passou",
+            "Sim, a flag foi aceita"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "O systemd do usuário seguiu sem o namespace e só registrou no journal. Flag aceita não é trava de pé: a tentativa de fuga é que decide.",
           "ref": "codigo",
           "cert": true
@@ -197,11 +197,11 @@
           "p": "O que o Claude Code faz, por padrão, se o sandbox não consegue subir?",
           "opcoes": [
             "Recusa iniciar",
+            "Roda só leitura",
             "Roda os comandos sem sandbox",
-            "Pede a senha",
-            "Roda só leitura"
+            "Pede a senha"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Por padrão segue sem sandbox. sandbox.failIfUnavailable: true faz recusar iniciar, que é o que um loop sem supervisão precisa.",
           "ref": "passos",
           "cert": true
@@ -209,24 +209,24 @@
         {
           "p": "No perfil :workspace, o agente consegue ler um segredo em ~/.config. O que fazer?",
           "opcoes": [
+            "Trocar para danger-full-access e confiar no deny de leitura do settings",
             "Nada, ler não faz mal",
-            "Cortar a rede e tirar segredos do alcance da sessão",
-            "Trocar para danger-full-access",
-            "Desligar o sandbox"
+            "Desligar o sandbox",
+            "Cortar a rede e tirar segredos do alcance da sessão"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Ler não vaza se não houver saída. Com a rede cortada pelo mesmo sandbox e o segredo fora do alcance, a tríade não fecha.",
           "ref": "diagrama"
         },
         {
           "p": "Qual a diferença entre o sandbox e a regra deny da aula 4?",
           "opcoes": [
-            "Nenhuma",
-            "A regra casa o texto do comando; o sandbox é o sistema operacional barrando o processo, seja qual for o texto",
+            "A regra casa o texto do comando; o sandbox é o sistema barrando o processo",
             "O sandbox é mais lento",
-            "A regra vale só no Codex"
+            "A regra vale para qualquer comando; o sandbox só barra o que o Codex executa",
+            "Nenhuma"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "find -delete, python3 -c ou um script que apaga passam por regra de texto; não passam por um sistema de arquivos só leitura.",
           "ref": "passos"
         }

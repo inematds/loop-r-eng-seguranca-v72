@@ -156,12 +156,12 @@
         {
           "p": "El corrector lee issues, lee el repositorio privado y edita archivos, sin red. ¿Qué dicen las dos reglas?",
           "opcoes": [
-            "Las dos aprueban",
-            "La tríada aprueba (sin salida), la Regla de Dos reprueba (A, B y C)",
             "Las dos reprueban",
-            "La tríada reprueba, la Regla de Dos aprueba"
+            "La tríada reprueba, la Regla de Dos aprueba",
+            "Las dos aprueban",
+            "La tríada aprueba (sin salida), la Regla de Dos reprueba (A, B y C)"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "[C] incluye cambiar el estado. Sin salida no hay fuga, pero el texto de la issue aún puede ordenar borrar o estropear.",
           "ref": "codigo",
           "cert": true
@@ -170,11 +170,11 @@
           "p": "¿Qué pide la Meta cuando la tarea necesita las tres sin una sesión nueva?",
           "opcoes": [
             "Un modelo más grande",
-            "Supervisión: humano en el loop u otra validación confiable",
-            "Más instrucciones en el prompt",
-            "Ejecutar de noche"
+            "Ejecutar de noche",
+            "Instrucciones más fuertes en el prompt, repetidas en cada turno del loop",
+            "Supervisión: humano en el loop u otra validación confiable"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Con las tres, el agente no debe operar solo. Un humano aprobando cada acción, o empezar una sesión de contexto limpio.",
           "ref": "diagrama",
           "cert": true
@@ -182,12 +182,12 @@
         {
           "p": "¿Qué hace que la segunda sesión sea \"de contexto limpio\"?",
           "opcoes": [
-            "Ser otro modelo",
             "No recibir el texto no confiable, solo campos revisados",
+            "Ser otro modelo, de otro proveedor, que no conoce la primera sesión",
             "Ejecutarse en otra carpeta",
             "Tener menos turnos"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "Si el texto del issue entra en el prompt de la segunda sesión, vuelve a tener [A]. Lo que separa es el contenido del contexto.",
           "ref": "passos"
         }

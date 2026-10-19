@@ -216,12 +216,12 @@
         {
           "p": "You have deny Bash(git push *) and allow Bash(git push origin feature *). What happens with git push origin feature-x?",
           "opcoes": [
-            "It goes through, the allow is more specific",
             "It is denied: deny comes first and allow makes no exception",
-            "Question",
-            "It depends on the mode"
+            "It depends on the mode",
+            "It goes through, the allow is more specific",
+            "Question"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "The doc is explicit: the order is deny, ask, allow, and specificity does not change that.",
           "ref": "diagrama",
           "cert": true
@@ -229,12 +229,12 @@
         {
           "p": "Why doesn't Bash(rm -rf *) block rm -r -f build?",
           "opcoes": [
-            "Because Claude Code ignores deny for rm",
-            "Because the rule matches text, and the text is different",
+            "Because the * in the rule doesn't match spaces or the separate flags",
             "Because sudo is missing",
-            "Because * does not match a space"
+            "Because Claude Code ignores deny for rm",
+            "Because the rule matches text, and the text is different"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "A Bash rule compares the command text. Bash(rm *) matches both forms; whatever does not start with rm (find -delete, scripts) is left to hook and sandbox.",
           "ref": "codigo",
           "cert": true
@@ -242,10 +242,10 @@
         {
           "p": "Which Codex -s for the step that edits the project with no network?",
           "opcoes": [
-            "danger-full-access",
+            "--yolo",
             "read-only",
             "workspace-write",
-            "--yolo"
+            "danger-full-access"
           ],
           "certa": 2,
           "explica": "workspace-write writes only in the workspace and, by default, with no network. The Codex doc reserves the bypass (--yolo) for an already isolated runner.",
@@ -256,8 +256,8 @@
           "opcoes": [
             "runs",
             "is refused: dontAsk denies what would ask for confirmation",
-            "hangs waiting",
-            "becomes allow"
+            "becomes allow",
+            "hangs waiting"
           ],
           "certa": 1,
           "explica": "Per the doc, dontAsk refuses every call that would ask for confirmation and lets through what allow permits. That is why the step's allow lists what it uses.",

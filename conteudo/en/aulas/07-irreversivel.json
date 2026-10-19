@@ -246,10 +246,10 @@
         {
           "p": "Why does the approval store the hash of the content?",
           "opcoes": [
-            "To be faster",
+            "Because Git requires it",
             "To refuse if the content changes after approval",
-            "To encrypt the submission",
-            "Because Git requires it"
+            "To encrypt the content before sending it to the external destination",
+            "To be faster"
           ],
           "certa": 1,
           "explica": "You approve what you read. If someone (or the agent) changes the text afterward, executar refuses: \"o conteúdo mudou depois da aprovação\" (the content changed after approval).",
@@ -259,10 +259,10 @@
         {
           "p": "Is the tty required on aprovar the security boundary?",
           "opcoes": [
-            "Yes, the agent never has a tty",
-            "No: it's a speed bump; the boundary is PORTA_DIR outside the agent's write access",
-            "Yes, if it's Linux",
-            "There is no boundary"
+            "Yes: the agent runs without a terminal and can never open an interactive tty",
+            "No: it's a speed bump; the boundary is PORTA_DIR outside the agent's reach",
+            "There is no boundary",
+            "Yes, if it's Linux"
           ],
           "certa": 1,
           "explica": "A pseudo-terminal fakes a tty (the rehearsal uses script). What holds is that the agent can't write the approval, because the folder is outside its sandbox.",
@@ -272,24 +272,24 @@
         {
           "p": "The loop moves to systemd. What needs to go with it?",
           "opcoes": [
-            "Your keys, so it doesn't fail",
-            "Time and memory caps, a proven sandbox, and the gate",
+            "Nothing: outside the terminal the agent has neither your session nor your shortcuts",
             "Just the PATH",
-            "Nothing: outside the terminal is safer"
+            "Time and memory caps, a proven sandbox, and the gate",
+            "Your keys, so it doesn't fail"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Outside the terminal, you are not watching. The blast radius has to fit within the cap, the sandbox and the gate, not within your session.",
           "ref": "codigo"
         },
         {
           "p": "In a Type=oneshot, which time cap does systemd respect?",
           "opcoes": [
-            "RuntimeMaxSec",
             "TimeoutStartSec (and the timeout on the command line)",
             "MemoryMax",
+            "RuntimeMaxSec",
             "None"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "systemd-analyze warns that RuntimeMaxSec is ignored in oneshot. MemoryMax is a memory cap, not a time cap.",
           "ref": "codigo"
         }

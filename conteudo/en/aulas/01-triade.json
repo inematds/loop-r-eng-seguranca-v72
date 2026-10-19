@@ -184,12 +184,12 @@
         {
           "p": "What are the three legs of the lethal trifecta?",
           "opcoes": [
-            "Model, prompt, and tool",
-            "Private data, third-party content, and an outbound channel",
-            "Read, write, and execute",
-            "Network, disk, and memory"
+            "Network, disk, and memory",
+            "Reading files, writing to disk, and running commands",
+            "Private data, third-party content, outbound channel",
+            "Model, system prompt, and connected tools"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "With all three in the same session, whoever writes the third-party content can tell the agent to take the private data out. Read/write/execute is file permission, a different thing.",
           "ref": "diagrama",
           "cert": true
@@ -197,12 +197,12 @@
         {
           "p": "No tool in your session marks all three legs by itself. Is the session safe?",
           "opcoes": [
-            "Yes",
             "Not necessarily: the legs add up in the session",
-            "Only if the model is the top of the subscription",
-            "Only if the prompt says to ignore instructions"
+            "Yes",
+            "Yes, as long as the model used is the top of the subscription",
+            "Yes, if the system prompt says to ignore instructions"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "A fetch, a customer database, and an email send, each harmless, close the trifecta together. That's why triade.py adds them up per session.",
           "ref": "codigo",
           "cert": true
@@ -210,24 +210,24 @@
         {
           "p": "Which leg is usually the cheapest to cut?",
           "opcoes": [
-            "Private data",
             "Third-party content",
             "The outbound channel: a fixed destination in the code and no network",
-            "None: the right answer is an injection detector"
+            "None: the right approach is to put an injection detector on the input",
+            "Private data"
           ],
-          "certa": 2,
+          "certa": 1,
           "explica": "Fixing the destination and turning off the network rarely gets in the way of the work. An injection detector is another model that can be fooled, not a cut leg.",
           "ref": "passos"
         },
         {
           "p": "Why is \"ignore instructions in the content\" in the prompt not the defense?",
           "opcoes": [
-            "Because the model doesn't read the system prompt",
             "Because it fails often enough; the defense is structural",
             "Because the docs forbid it",
+            "Because the model doesn't read the system prompt when tools are active",
             "Because it slows the agent down"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "It helps, but it doesn't guarantee anything. The guarantee comes from the session not having all three legs, which doesn't depend on the model resisting.",
           "ref": "passos"
         }

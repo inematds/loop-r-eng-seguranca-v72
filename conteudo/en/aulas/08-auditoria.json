@@ -237,12 +237,12 @@
         {
           "p": "auditar.py approved your map. Is the loop safe?",
           "opcoes": [
+            "Only with the top model",
             "Yes, the script guarantees it",
-            "Only if the map is true: every control needs the proof from lessons 4 to 7",
-            "Only if it runs every day",
-            "Only with the top model"
+            "Yes, as long as auditar.py runs every day in cron and fails any change",
+            "Only if the map is true: each control needs proof from lessons 4–7"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "The script checks the map, not the machine. An optimistic map approves an open loop.",
           "ref": "codigo",
           "cert": true
@@ -250,10 +250,10 @@
         {
           "p": "What is the course order for closing a loop?",
           "opcoes": [
-            "Sandbox, then map",
-            "Map the sessions, separate the reader, lock down (permission, hook, sandbox) and set the gate",
-            "Gate first, the rest later",
-            "Doesn't matter"
+            "Gate first, because it already holds back every irreversible action; map and locks later",
+            "Map sessions, separate the reader, lock down (permission, hook, sandbox), set the gate",
+            "Doesn't matter",
+            "Sandbox, then map"
           ],
           "certa": 1,
           "explica": "Without the map, you lock down the wrong session. The locks come after you know what each session combines.",
@@ -264,23 +264,23 @@
           "p": "When should you re-audit?",
           "opcoes": [
             "Never, if it passed",
-            "Every new tool or MCP, new machine, or new version of Claude Code or Codex",
-            "Only after an incident",
-            "Once a year"
+            "Once a year",
+            "With every new tool or MCP, new machine, or new agent version",
+            "Only after an incident, when the log shows an action outside what was expected"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "A new tool can bring a leg; a new machine may not have the lock the previous one had (lesson 6).",
           "ref": "diagrama"
         },
         {
           "p": "One session combines A, B and C, and you can't split it. What does the map need to say?",
           "opcoes": [
-            "Nothing",
             "\"humano\": true, with the gate on every outbound action",
             "\"rede\": true",
+            "Nothing",
             "\"nova_sessao\": true"
           ],
-          "certa": 1,
+          "certa": 0,
           "explica": "With all three, the session is not autonomous: supervision on every action, as the Rule of Two requires.",
           "ref": "codigo"
         }

@@ -237,10 +237,10 @@
         {
           "p": "De onde vem a injeção indireta?",
           "opcoes": [
-            "Do usuário que digita no chat",
+            "Do sistema operacional",
             "Do conteúdo que o agente lê: página, issue, e-mail",
             "Do modelo, sozinho",
-            "Do sistema operacional"
+            "Do usuário que digita no chat um pedido disfarçado de tarefa"
           ],
           "certa": 1,
           "explica": "Quem escreveu o conteúdo nunca falou com o agente. Basta o agente ler o texto dele.",
@@ -250,12 +250,12 @@
         {
           "p": "No modo sem-saida, por que o canário ainda vazou?",
           "opcoes": [
+            "A rede estava ligada",
             "Bug do script",
-            "A resposta também é canal: imagem markdown com o segredo na URL",
             "O modelo era fraco",
-            "A rede estava ligada"
+            "A resposta também é canal: imagem markdown com o segredo na URL"
           ],
-          "certa": 1,
+          "certa": 3,
           "explica": "Cortar a ferramenta não corta a resposta. Se alguém renderiza o markdown, a imagem leva o segredo. Não renderize imagens de resposta automaticamente, ou separe o leitor.",
           "ref": "codigo",
           "cert": true
@@ -263,24 +263,24 @@
         {
           "p": "O modelo real não seguiu a instrução escondida nesta rodada. Conclusão?",
           "opcoes": [
-            "Pode tirar a separação",
+            "O canário pode sair: o modelo já provou que resiste a esse ataque",
+            "Use sempre esse modelo",
             "Uma rodada não prova a próxima; a defesa continua estrutural",
-            "O canário é desnecessário",
-            "Use sempre esse modelo"
+            "Pode tirar a separação"
           ],
-          "certa": 1,
+          "certa": 2,
           "explica": "Resistir uma vez é amostra de tamanho um. A separação segura até o agente falso que obedece sempre.",
           "ref": "codigo"
         },
         {
           "p": "No modo separado, o que o agente com o segredo recebe?",
           "opcoes": [
+            "Só os campos extraídos por código (título e preço)",
             "A página inteira",
             "A página sem as partes ocultas",
-            "Só os campos extraídos por código (título e preço)",
-            "Um resumo feito por outro modelo"
+            "Um resumo da página feito por outro modelo, sem acesso ao segredo"
           ],
-          "certa": 2,
+          "certa": 0,
           "explica": "Resumo por outro modelo ainda carrega texto livre. Campos extraídos por código não carregam instrução.",
           "ref": "codigo"
         }
